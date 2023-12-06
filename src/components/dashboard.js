@@ -2,7 +2,7 @@
 import React from 'react';
 import './dashboard.css'; // Import the CSS file
 
-const Dashboard = () => {
+function Dashboard() {
   return (
     <div className="container-search">
       <h1>Looking for a contractor? Search below!</h1>

@@ -1,19 +1,20 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-// import Login from './components/login';
-// import SignUp from './components/signup';
-import Navigation from './components/Navigation'; // Import the navigation component
+import Login from './components/login';
+import SignUp from './components/signup';
+import Navigation from './components/Navigation';
 import Dashboard from './components/dashboard';
 
 function App() {
   return (
     <Router>
-      <Navigation /> {/* Include the navigation component */}
+      <Navigation />
       <Routes>
+        <Route path="/signup" element={<SignUp />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/Dashboard" element={<Dashboard/>} />
 
-        <Route path="/" element={<Dashboard />} />
-
-        {/* Add more routes as needed */}
+        {/* Additional routes can be added here */}
       </Routes>
     </Router>
   );
