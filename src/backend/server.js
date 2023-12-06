@@ -1,4 +1,4 @@
-require('dotenv').config({ path: 'C:/Users/Peyman/Desktop/cs4471/GoContract/.env' });
+require('dotenv').config({ path: 'D:\University\Fourth Year A\CS 4471A\ASN\GoContract.env' });
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
