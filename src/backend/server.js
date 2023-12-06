@@ -1,98 +1,68 @@
-require('dotenv').config({ path: 'D:\University\Fourth Year A\CS 4471A\ASN\GoContract.env' });
 const express = require('express');
-const bodyParser = require('body-parser');
-const cors = require('cors');
-const bcrypt = require('bcryptjs');
-
+const fs = require('fs/promises');
+const path = require('path');
+const cors = require('cors'); // Add this line
+const bodyParser = require('body-parser'); // Add this line to parse JSON in the request body
 const app = express();
 
-// Middleware
 app.use(bodyParser.json());
-app.use(express.json());
+// Enable CORS
 app.use(cors());
+const port = 3001; // Choose a port number
 
-const { CloudantV1 } = require('@ibm-cloud/cloudant');
-const { IamAuthenticator } = require('ibm-cloud-sdk-core');
-console.log(process.env.CLOUDANT_APIKEY);
-console.log(process.env.CLOUDANT_URL);
+let events = [];
 
-const cloudant = CloudantV1.newInstance({
-  authenticator: new IamAuthenticator({
-    apikey: process.env.CLOUDANT_APIKEY,
-  }),
-  serviceUrl: process.env.CLOUDANT_URL,
-});
+app.use(cors()); // Add this line to enable CORS
 
-const dbName = 'users';
+const initialize = async () => {
+  try {
+    const eventsFilePath = path.join(__dirname, 'events.json');
+    const eventsData = await fs.readFile(eventsFilePath, 'utf-8');
+    events = JSON.parse(eventsData) || [];
+  } catch (error) {
+    console.error('Error reading events.json:', error.message);
+  }
+};
 
-// Signup Endpoint
-app.post('/signup', async (req, res) => {
-    const { username, password } = req.body;
-    console.log('Request body:', req.body); 
-
-    if (!username || !password) {
-      return res.status(400).send('Username and password are required');
-    }
-  
+initialize().then(() => {
+  app.get('/events', async (req, res) => {
     try {
-      // Hash the password
-      const hashedPassword = await bcrypt.hash(password, 10);
-  
-      // Prepare to find existing user
-      const findUserQuery = {
-        selector: { username: username },
-        limit: 1
-      };
-  
-      // Check if user already exists
-      const existingUsers = await cloudant.postFind({ db: dbName, selector: findUserQuery.selector });
-      if (existingUsers.result.docs.length > 0) {
-        return res.status(400).send('User already exists');
-      }
-  
-      // Add new user to Cloudant
-      const user = { username, password: hashedPassword };
-      const response = await cloudant.postDocument({ db: dbName, document: user });
-  
-      res.status(201).json({ message: 'User created', id: response.result.id });
+      const eventsPath = path.join(__dirname, 'events.json');
+      const eventsData = await fs.readFile(eventsPath, 'utf-8');
+      const events = JSON.parse(eventsData);
+      res.json(events);
     } catch (error) {
-      console.error(error); // Log the error for debugging
+      console.error('Error reading events:', error);
       res.status(500).json({ error: 'Internal Server Error' });
     }
   });
-  
+  // POST endpoint to add a new event
 
-// Login Endpoint
-app.post('/login', async (req, res) => {
-  const { username, password } = req.body;
-  console.log('Request body:', req.body); 
+  app.post('/events', async (req, res) => {
+    const { date, title } = req.body;
+    initialize();
 
-  try {
-    // Find user by username
-    const findUser = {
-      selector: { username: username },
-      limit: 1
-    };
-
-    const userResponse = await cloudant.postFind({ db: dbName, selector: findUser.selector });
-
-    if (userResponse.result.docs.length === 0) {
-      return res.status(400).send('User not found');
+    if (!date || !title) {
+      return res.status(400).json({ error: 'Date and title are required.' });
     }
 
-    const user = userResponse.result.docs[0];
-    console.log(userResponse);
-    // Compare hashed password
-    const validPassword = await bcrypt.compare(password, user.password);
-    if (!validPassword) {
-      return res.status(400).send('Invalid password');
+    const newEvent = { date, title };
+    events.push(newEvent);
+
+    // Write the entire array back to events.json
+    try {
+      const eventsFilePath = path.join(__dirname, 'events.json');
+      await fs.writeFile(eventsFilePath, JSON.stringify(events, null, 2), 'utf-8');
+    } catch (error) {
+      console.error('Error writing events to events.json:', error.message);
+      return res.status(500).json({ error: 'Internal Server Error' });
     }
 
-    res.json({ message: 'Logged in successfully' });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
+    res.status(201).json(newEvent);
+  });
+
+  // Start the server after initialization
+  app.listen(port, () => {
+    console.log(`Server is running on port ${port}`);
+  });
 });
-
-const PORT = process.env.PORT || 3001;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
