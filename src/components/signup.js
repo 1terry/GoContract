@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 function SignUp() {
+  const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [userType, setUserType] = useState('');
@@ -32,7 +34,8 @@ function SignUp() {
       if (response.status === 201) {
         console.log('Sign Up Successful', data);
         setMessage('Sign Up Successful!'); // Display success message
-        // Redirect or handle success scenario
+        navigate('/login');
+
       } else {
         console.error('Sign Up Failed emnail:', email,password);
         setMessage(data.message || 'Sign Up Failed'); // Display error message from server or default message
