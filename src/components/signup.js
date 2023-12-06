@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 function SignUp() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [userType, setUserType] = useState('');
   const [message, setMessage] = useState(''); // To display messages to the user
 
   const handleSubmit = async (event) => {
@@ -14,20 +15,20 @@ function SignUp() {
       setMessage('Email and password are required');
       return;
     }
-
+    if (userType =="") {
+      setMessage('please select a user type');
+      return;
+    }
     try {
-      console.log('Sending:', { username: email, password: password });
-
       const response = await fetch('http://localhost:3001/signup', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ username: email, password: password }),
+        body: JSON.stringify({ username: email, password: password, userType: userType}),
       });
 
       const data = await response.json();
-      console.log (data);
       if (response.status === 201) {
         console.log('Sign Up Successful', data);
         setMessage('Sign Up Successful!'); // Display success message
@@ -61,6 +62,14 @@ function SignUp() {
           value={password} 
           onChange={(e) => setPassword(e.target.value)} 
         />
+      </label>
+      <label>
+        User Type
+        <select value={userType} onChange={(e) => setUserType(e.target.value)}>
+          <option value="" disabled selected>Select User Type</option>
+          <option value="contractor">Contractor</option>
+          <option value="homeowner">Home Owner</option>
+        </select>
       </label>
       <button type="submit">Sign Up</button>
     </form>

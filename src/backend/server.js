@@ -27,7 +27,7 @@ const dbName = 'users';
 
 // Signup Endpoint
 app.post('/signup', async (req, res) => {
-    const { username, password } = req.body;
+    const { username, password, userType } = req.body;
     console.log('Request body:', req.body); 
 
     if (!username || !password) {
@@ -51,7 +51,7 @@ app.post('/signup', async (req, res) => {
       }
   
       // Add new user to Cloudant
-      const user = { username, password: hashedPassword };
+      const user = { username, password: hashedPassword, userType };
       const response = await cloudant.postDocument({ db: dbName, document: user });
   
       res.status(201).json({ message: 'User created', id: response.result.id });
