@@ -209,7 +209,8 @@ app.post("/addBooking", async (req, res) => {
       contractorId,
       date,
       serviceType,
-      serviceDetails, // Assuming you want to associate the service with a user
+      serviceDetails,
+      status, // Assuming you want to associate the service with a user
       createdAt: new Date().toISOString(), // Optional: add a timestamp
     };
     console.log(newBooking);

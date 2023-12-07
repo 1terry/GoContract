@@ -19,12 +19,6 @@ function App() {
           <Route path="/signup" element={<SignUp />} />
           <Route path="/login" element={<Login />} />
           <Route
-            path="/bookingform"
-            element={
-              <BookingForm contractorName="Nazim" contractorId="testing" />
-            }
-          />
-          <Route
             path="/contractorDashboard"
             element={
               <PrivateRoute>

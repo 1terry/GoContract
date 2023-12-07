@@ -10,9 +10,6 @@ function Navigation() {
       <Link to="/signup">
         <button>Sign Up</button>
       </Link>
-      <Link to="/bookingform">
-        <button>Booking Form</button>
-      </Link>
     </div>
   );
 }

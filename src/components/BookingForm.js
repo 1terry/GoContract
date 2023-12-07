@@ -28,6 +28,7 @@ function BookingForm({ contractorName, contractorId }) {
           date: date,
           typeOfService: typeOfService,
           serviceDetails: serviceDetails,
+          status: false,
         }),
       });
       console.log(response);
