@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 function Login() {
+  const { login, setUserData } = useAuth(); // Destructure setUserData from the context
+  const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState(''); // To display messages to the user
@@ -8,7 +12,7 @@ function Login() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     setMessage(''); // Clear previous messages
-
+     console.log("Test");
     // Simple validation
     if (!email || !password) {
       setMessage('Email and password are required');
@@ -16,7 +20,6 @@ function Login() {
     }
 
     try {
-      console.log('Sending:', { username: email, password: password });
 
       const response = await fetch('http://localhost:3001/login', {
         method: 'POST',
@@ -27,11 +30,32 @@ function Login() {
       });
 
       const data = await response.json();
-      console.log (data);
-      if (response.status === 201) {
-        console.log('Login Successful', data);
-        setMessage('Login Successful!'); // Display success message
-        // Redirect or handle success scenario
+      console.log(data.userType);
+      if (response.status === 200) {
+        if (data.userType === "contractor") {
+          fetch(`/getUserInfo?username=${email}`, {
+              headers: {
+                'Accept': 'application/json'
+              }
+            })
+            .then(response => {
+              if (!response.ok) {
+                console.log("error");
+                throw new Error('Network response was not ok');
+              }
+              return response.json(); // Convert the response to JSON
+            })
+            .then(data => {
+              console.log('Setting user data', data);
+              login(data);
+              navigate('/contractorDashboard');
+            })
+            .catch(error => {
+              console.error('Error fetching user data:', error);
+              // Handle any errors from fetching user data
+            });
+        }
+  
       } else {
         console.error('Login Failed email:', email,password);
         setMessage(data.message || 'Login Failed'); // Display error message from server or default message
