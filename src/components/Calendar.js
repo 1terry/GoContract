@@ -126,10 +126,30 @@ const CalendarComponent = () => {
     }
     return null;
   };
-  const selectedDateKey = selectedDate.toISOString().split('T')[0];
-  const selectedDateEvents = events.filter((event) => event.date === selectedDateKey);
-  const selectedDateBookings = bookings.filter((book) => book.date.split('T')[0] === selectedDateKey && book.status)
 
+  const selectedDateKey = new Date(selectedDate).toISOString().split('T')[0];
+  const selectedDateEvents = filterEventsByDate(events, selectedDateKey);
+  const selectedDateBookings = filterBookingsByDate(bookings, selectedDateKey);
+
+// ...
+
+  // Helper function to filter events by date
+  const filterEventsByDate = (events, dateKey) => {
+    try {
+      return events.filter((event) => new Date(event.date).toISOString().split('T')[0] === dateKey);
+    } catch (error) {
+      console.error('Error filtering events by date:', error);
+      return [];
+    }
+  };
+  const filterBookingsByDate = (bookings, dateKey) => {
+    try {
+      return bookings.filter((book) => new Date(book.date).toISOString().split('T')[0] === dateKey && book.status);
+    } catch (error) {
+      console.error('Error filtering bookings by date and status:', error);
+      return [];
+    }
+  };
   
   return (
     <div>
