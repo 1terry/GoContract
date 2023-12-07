@@ -1,4 +1,4 @@
-require('dotenv').config({ path: 'C:/Users/Peyman/Desktop/cs4471/GoContract/.env' });
+require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
@@ -91,6 +91,48 @@ app.post('/login', async (req, res) => {
     res.json({ message: 'Logged in successfully' });
   } catch (error) {
     res.status(500).json({ error: error.message });
+  }
+});
+
+let events = [];
+const dbEvents = 'events';
+
+app.post('/events/search', async (req, res) => {
+  const {username, date, title } = req.body;
+  try {
+    const findUserEvents = {
+      selector: { username: username },
+    };
+    const eventsData = await cloudant.postFind({ db: dbEvents, selector: findUserEvents.selector });
+    const jsonResponse = JSON.parse(JSON.stringify(eventsData.result));
+    const { docs } = eventsData.result;
+    res.json(docs)
+  } catch (error) {
+    console.error('Error reading events:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+// POST endpoint to add a new event
+
+app.post('/events', async (req, res) => {
+  const {username, date, title } = req.body;
+  console.log('Request body:', req.body); 
+
+  if (!date || !title) {
+    return res.status(400).send('Date and title are required.');
+  }
+
+  try {
+    const newEvent = {username, date, title};
+    events.push(newEvent);
+
+    // Add new event to Cloudant
+    const response = await cloudant.postDocument({ db: dbEvents, document: newEvent });
+
+    res.status(201).json({ message: 'Events created', id: response.result.id });
+  } catch (error) {
+    console.error(error); // Log the error for debugging
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 });
 

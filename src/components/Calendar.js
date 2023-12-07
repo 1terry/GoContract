@@ -3,10 +3,12 @@ import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import './Calendar.css';
 
+const Username = '1234'
+
 const CalendarComponent = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [events, setEvents] = useState([]);
-  const [newEvent, setNewEvent] = useState({ date: '', title: '' });
+  const [newEvent, setNewEvent] = useState({ username:'', date: '', title: '' });
 
   useEffect(() => {
     // Fetch events from your database
@@ -15,7 +17,14 @@ const CalendarComponent = () => {
 
   const fetchEvents = async () => {
     try {
-      const response = await fetch('http://localhost:3001/events'); // Adjust the endpoint based on your backend
+      newEvent.username = Username
+      const response = await fetch('http://localhost:3001/events/search', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(newEvent),
+      });
       const data = await response.json();
       setEvents(data);
     } catch (error) {
@@ -35,6 +44,7 @@ const CalendarComponent = () => {
 
   const handleAddEvent = async () => {
     try {
+      newEvent.username = Username
       const response = await fetch('http://localhost:3001/events', {
         method: 'POST',
         headers: {
@@ -45,7 +55,7 @@ const CalendarComponent = () => {
 
       if (response.ok) {
         fetchEvents(); // Refresh events after adding a new one
-        setNewEvent({ date: '', title: '' });
+        setNewEvent({username:'', date: '', title: '' });
       } else {
         console.error('Failed to add event');
       }
@@ -73,6 +83,7 @@ const CalendarComponent = () => {
   };
   const selectedDateKey = selectedDate.toISOString().split('T')[0];
   const selectedDateEvents = events.filter((event) => event.date === selectedDateKey);
+
   
   return (
     <div>
