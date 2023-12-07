@@ -1,10 +1,8 @@
-require("dotenv").config({
-  path: "C:/Users/Peyman/Desktop/cs4471/GoContract/.env"
-});
-const express = require("express");
-const bodyParser = require("body-parser");
-const cors = require("cors");
-const bcrypt = require("bcryptjs");
+require('dotenv').config();
+const express = require('express');
+const bodyParser = require('body-parser');
+const cors = require('cors');
+const bcrypt = require('bcryptjs');
 const nodemailer = require("nodemailer");
 
 const app = express();
