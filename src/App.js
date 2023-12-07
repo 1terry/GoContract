@@ -7,30 +7,21 @@ import ContractorDashboard from './components/contractorDashboard';
 import ConditionalNavigation from './components/conditionalNavigation';
 import PrivateRoute from './components/PrivateRoute'; 
 import Dashboard from './components/dashboard';
-import "./App.css";
-import ContractorData from "./TempData.json";
-import ContractorCard from './components/contractorCard';
 
 function App() {
   return (
-    // <div className="App">
-    //   <label>Looking for a contractor? Search below!</label>
-    //   <SearchBar
-    //     placeholder="Enter a contractor name"
-    //     data={ContractorData}
-    //   ></SearchBar>
-    // </div>
-    <Router>
-      <Navigation />
-      <Routes>
-        <Route path="/signup" element={<SignUp />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/Dashboard" element={<Dashboard/>} />
-        <Route path="/ContractorCard" element={<ContractorCard/>} />
+    <AuthProvider> {/* Wrap your routes with AuthProvider */}
+      <Router>
+        <ConditionalNavigation />
+        <Routes>
+          <Route path="/signup" element={<SignUp />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/dashboard" element={<Dashboard />} />
 
-        {/* Additional routes can be added here */}
-      </Routes>
-    </Router>
+          <Route path="/contractorDashboard" element={<PrivateRoute><ContractorDashboard /></PrivateRoute>} />
+        </Routes>
+      </Router>
+    </AuthProvider>
   );
 }
 

@@ -164,11 +164,6 @@ app.post('/addService', async (req, res) => {
   }
 });
 
-
-
-
-
-
 // Modify performSearch to handle an array of users
 const performSearch = (data, contractorName) => {
   const searchWord = contractorName;
