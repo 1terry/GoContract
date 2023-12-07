@@ -25,6 +25,7 @@ const cloudant = CloudantV1.newInstance({
 
 const dbUsers = 'users';
 const dbServices = 'services';
+const dbBookings = 'bookings';
 
 const { v4: uuidv4 } = require('uuid'); // Import UUID
 
@@ -166,6 +167,32 @@ app.post('/addService', async (req, res) => {
 
 
 
+// getContractor Endpoint
+app.get('/getContractorBookings', async (req, res) => {
+  const { userId } = req.query; // Assuming the username is passed as a query parameter
+
+  if (!userId) {
+    return res.status(400).send('error');
+  }
+
+  try {
+    // Query to find user by username
+    const findUserQuery = {
+      selector: { contractorId: userId },
+      limit: 1
+    };
+
+    const userResponse = await cloudant.postFind({ db: dbBookings, selector: findUserQuery.selector });
+    if (userResponse.result.docs.length === 0) {
+      return res.status(404).send('User not found');
+    }
+    const contractorBookings = userResponse.result.docs[0];
+    // Return user data, excluding sensitive information like password
+    res.json(contractorBookings);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
 
 
 

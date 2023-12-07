@@ -2,9 +2,11 @@
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import AddServiceForm from './AddServiceForm'; // Import the new component
+import { useNavigate } from 'react-router-dom';
 
 function ContractorDashboard() {
   const { userData } = useAuth();
+  const navigate = useNavigate();
   const [showForm, setShowForm] = useState(false);
 
   if (!userData) {
@@ -21,6 +23,7 @@ function ContractorDashboard() {
       {showForm && (
         <AddServiceForm onClose={() => setShowForm(false)} />
       )}
+      <button onClick={() => navigate('/manageBookings')}>Manage Bookings</button>
     </div>
   );
 }
