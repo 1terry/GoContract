@@ -7,10 +7,9 @@ function ConditionalNavigation() {
     const location = useLocation();
     const { isAuthenticated } = useAuth(); // Use the authentication state
 
-    if (isAuthenticated || location.pathname === '/contractorDashboard') {
+    if (isAuthenticated || location.pathname === '/contractorDashboard' || location.pathname === '/dashboard') {
         return null; // Hide Navigation if authenticated or on contractorDashboard
     }
-
     return <Navigation />;
 }
 

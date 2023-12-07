@@ -55,6 +55,30 @@ function Login() {
               // Handle any errors from fetching user data
             });
         }
+
+        if (data.userType === "homeowner") {
+          fetch(`/getUserInfo?username=${email}`, {
+              headers: {
+                'Accept': 'application/json'
+              }
+            })
+            .then(response => {
+              if (!response.ok) {
+                console.log("error");
+                throw new Error('Network response was not ok');
+              }
+              return response.json(); // Convert the response to JSON
+            })
+            .then(data => {
+              console.log('Setting user data', data);
+              login(data);
+              navigate('/dashboard');
+            })
+            .catch(error => {
+              console.error('Error fetching user data:', error);
+              // Handle any errors from fetching user data
+            });
+        }
   
       } else {
         console.error('Login Failed email:', email,password);
