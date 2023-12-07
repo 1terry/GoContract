@@ -1,12 +1,13 @@
-import React from 'react';
+// src/components/ContractorDashboard.js
+import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
+import AddServiceForm from './AddServiceForm'; // Import the new component
 
 function ContractorDashboard() {
   const { userData } = useAuth();
-  console.log(userData);
-  // Check if userData is available before trying to access its properties
+  const [showForm, setShowForm] = useState(false);
+
   if (!userData) {
-    // Render a loading message or alternative content until userData is available
     return <div>Loading user data...</div>;
   }
 
@@ -15,8 +16,11 @@ function ContractorDashboard() {
       <nav>
         {/* Your nav elements */}
       </nav>
-      {/* Safely access userData properties since userData is confirmed to be available */}
-      <div>User ID: {userData.userId}</div>
+      <div>Hello {userData.firstName}!</div>
+      <button onClick={() => setShowForm(true)}>Add a Service</button>
+      {showForm && (
+        <AddServiceForm onClose={() => setShowForm(false)} />
+      )}
     </div>
   );
 }

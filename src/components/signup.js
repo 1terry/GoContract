@@ -4,6 +4,8 @@ import { useNavigate } from 'react-router-dom';
 function SignUp() {
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
   const [password, setPassword] = useState('');
   const [userType, setUserType] = useState('');
   const [message, setMessage] = useState(''); // To display messages to the user
@@ -27,7 +29,7 @@ function SignUp() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ username: email, password: password, userType: userType}),
+        body: JSON.stringify({ firstName: firstName, lastName: lastName, username: email, password: password, userType: userType}),
       });
 
       const data = await response.json();
@@ -50,19 +52,26 @@ function SignUp() {
       <h2>Sign Up</h2>
       {message && <div>{message}</div>} {/* Display messages to the user */}
       <label>
+        First Name:
+        <input 
+          value={firstName} 
+          onChange={(e) => setFirstName(e.target.value)} 
+        />
+      </label>
+      <label>
+        Last Name:
+        <input 
+          value={lastName} 
+          onChange={(e) => setLastName(e.target.value)} 
+        />
+      </label>
+      <br></br>
+      <label>
         Email:
         <input 
           type="email" 
           value={email} 
           onChange={(e) => setEmail(e.target.value)} 
-        />
-      </label>
-      <label>
-        Password:
-        <input 
-          type="password" 
-          value={password} 
-          onChange={(e) => setPassword(e.target.value)} 
         />
       </label>
       <label>
@@ -73,6 +82,16 @@ function SignUp() {
           <option value="homeowner">Home Owner</option>
         </select>
       </label>
+      <br></br>
+      <label>
+        Password:
+        <input 
+          type="password" 
+          value={password} 
+          onChange={(e) => setPassword(e.target.value)} 
+        />
+      </label>
+      <br></br>
       <button type="submit">Sign Up</button>
     </form>
   );

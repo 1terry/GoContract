@@ -38,7 +38,6 @@ function Login() {
                 'Accept': 'application/json'
               }
             })
-
             .then(response => {
               if (!response.ok) {
                 console.log("error");
@@ -47,8 +46,8 @@ function Login() {
               return response.json(); // Convert the response to JSON
             })
             .then(data => {
-              setUserData(data); // Store the user data in the context
-              login();
+              console.log('Setting user data', data);
+              login(data);
               navigate('/contractorDashboard');
             })
             .catch(error => {
