@@ -94,38 +94,39 @@ app.post('/login', async (req, res) => {
   }
 });
 
+const performSearch = (data, contractorName) => {
+  const searchWord = contractorName.toLowerCase();
 
-// Search Endpoint
+  if (!searchWord) {
+    return []; // Empty array if no search term provided
+  }
+
+  return data.filter((value) =>
+    value.contractorName.toLowerCase().includes(searchWord)
+  );
+};
+
 // Search Endpoint
 app.post('/search', async (req, res) => {
-  const { contractorName } = req.body;
-  console.log('Request body:', req.body);
-
   try {
-    // Find user by username
-    const findUser = {
-      selector: { username: contractorName },
-      limit: 1
-    };
+    const { contractorName } = req.body;
+    console.log('Request body:', req.body);
 
-    const userResponse = await cloudant.postFind({ db: dbName, selector: findUser.selector });
+    // Perform search filtering
+    const filteredData = performSearch(data, contractorName);
 
-    if (userResponse.result.docs.length === 0) {
-      return res.status(400).send('User not found');
+    // If no results, return a 404 response
+    if (filteredData.length === 0) {
+      return res.status(404).json({ message: 'No results found' });
     }
+    const user = filteredData;
 
-    const user = userResponse.result.docs[0];
-    console.log(userResponse);
-    // Compare hashed password
-
-    res.json({ message: 'User found', user: user });
+    res.json({ message: 'Results found', user: user });
   } catch (error) {
+    console.error('Error in search:', error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
-
-
-
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

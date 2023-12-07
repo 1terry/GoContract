@@ -1,50 +1,63 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate
-import './dashboard.css'; // Import the CSS file
+import { useNavigate } from 'react-router-dom';
+import './dashboard.css';
 import ContractorCard from './contractorCard';
-import SearchBar from './SearchBar'; // Adjust the path accordingly
 
 function Dashboard() {
   const [showContractorCard, setShowContractorCard] = useState(false);
-  const navigate = useNavigate(); // Initialize the navigate function
+  const [contractorName, setContractorName] = useState('');
+  const [message, setMessage] = useState('');
+  const navigate = useNavigate();
 
-  const handleSearchClick = () => {
-    // Perform any search logic here
-   
-    
+  const handleSearchClick = async (event) => {
+    event.preventDefault();
+    setMessage('');
 
-    // Navigate to the contractorCard route
-    setShowContractorCard(true);
+    try {
+      console.log('Sending:', { username: contractorName });
+
+      const response = await fetch('http://localhost:3001/search', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ username: contractorName }),
+      });
+
+      const data = await response.json();
+      console.log(data);
+
+      if (response.status === 201) {
+        console.log('Query Successful', data);
+        setMessage('Query Successful!');
+        // Redirect or handle success scenario
+        setShowContractorCard(true);
+      } else {
+        console.error('Query Failed:', contractorName);
+        setMessage(data.message || 'Query Failed');
+      }
+    } catch (error) {
+      console.error('Error during Query', error);
+      setMessage('An error occurred during Query');
+    }
   };
 
   return (
-    <div className="container-search">
-      <h1>Looking for a contractor? Search below!</h1>
-
-
-      {/* <input
-        type="text"
-        placeholder={placeholder}
-        value={searchWord}
-        onChange={handleChange}
-      />
-      <button onClick={handleFilter}>Search</button>
-      {filteredData.map((item) => (
-        <div key={item.id}>{item.contractorName}</div>
-      ))} */}
-
-
-      <div className="Search-part">
-        <input className="format" type="text" placeholder="Search here" />
-        <button onClick={handleSearchClick}>Search for kohei</button>      
-        {/* <SearchBar placeholder="Search for contractors"/> */}
-
-      </div>
+    <form onSubmit={handleSearchClick} className='container-search'>
+      <h2>Search</h2>
+      {message && <div>{message}</div>}
+      <label>
+        Search for contractor
+        <input 
+          type="text" 
+          value={contractorName} 
+          onChange={(e) => setContractorName(e.target.value)} 
+        />
+      </label>
+      <button type="submit">Search</button>
 
       {showContractorCard && <ContractorCard />}
-
-
-    </div>
+    </form>
   );
 }
 
