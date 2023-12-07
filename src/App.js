@@ -1,22 +1,33 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { AuthProvider } from "./context/AuthContext";
 import Login from "./components/login";
 import SignUp from "./components/signup";
-import Navigation from "./components/Navigation";
-import Invoice from "./components/invoice";
-import Data from "./tempData.json";
+import ContractorDashboard from "./components/contractorDashboard";
+import ConditionalNavigation from "./components/conditionalNavigation";
+import PrivateRoute from "./components/PrivateRoute";
 
 function App() {
   return (
-    <Router>
-      <Navigation />
-      <Routes>
-        <Route path="/signup" element={<SignUp />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/invoice" element={<Invoice data={Data}></Invoice>} />
-        {/* Additional routes can be added here */}
-      </Routes>
-    </Router>
+    <AuthProvider>
+      {" "}
+      {/* Wrap your routes with AuthProvider */}
+      <Router>
+        <ConditionalNavigation />
+        <Routes>
+          <Route path="/signup" element={<SignUp />} />
+          <Route path="/login" element={<Login />} />
+          <Route
+            path="/contractorDashboard"
+            element={
+              <PrivateRoute>
+                <ContractorDashboard />
+              </PrivateRoute>
+            }
+          />
+        </Routes>
+      </Router>
+    </AuthProvider>
   );
 }
 
