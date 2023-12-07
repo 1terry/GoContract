@@ -1,6 +1,6 @@
 [
   {
-    "InvoiceId": "1",
+    "InvoiceId": 1,
     "InvoiceDate": "December 6, 2023",
     "DueDate": "December 6, 2023",
     "ContractorName": "Person1",
@@ -12,6 +12,11 @@
     "ClientAddress": "Address2",
     "ClientCity": "City2",
     "ClientPhone": "Phone2",
-    "ClientEmail": "Email2"
+    "ClientEmail": "Email2",
+    "ListOfServices": [
+      { "name": "sampleThing", "value": 10921 },
+      { "name": "otherThing", "value": 120943 },
+      { "name": "superGigathing", "value": 1209342 }
+    ]
   }
 ]
