@@ -9,23 +9,50 @@ function Dashboard() {
   const [message, setMessage] = useState('');
   const navigate = useNavigate();
 
+  const [jsonData, setJsonData] = useState(''); // Added state to store JSON data
+
+
   const handleSearchClick = async (event) => {
     event.preventDefault();
     setMessage('');
 
     try {
-      console.log('Sending:', { username: contractorName });
+      console.log('Sending:', { contractorName: contractorName });
 
       const response = await fetch('http://localhost:3001/search', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ username: contractorName }),
+        body: JSON.stringify({ contractorName: contractorName }),
       });
 
+      const filterRelevantData = (data) => {
+
+        const relevantKeys = ['username', 'userType'];
+        const filteredData = data.map(user => {
+          const filteredUser = {};
+          relevantKeys.forEach(key => {
+            if (user.hasOwnProperty(key)) {
+              filteredUser[key] = user[key];
+            }
+          });
+          return filteredUser;
+        });
+
+        return filteredData;
+      };
+
+
       const data = await response.json();
+
       console.log(data);
+      // Now to format the data
+      // Also send response status to update the query
+
+      const filteredData = filterRelevantData(data);
+      console.log('filtered data: ', filteredData);
+      setJsonData(JSON.stringify(filteredData, null, 2)); // Convert JSON to string with indentation
 
       if (response.status === 201) {
         console.log('Query Successful', data);
@@ -56,7 +83,12 @@ function Dashboard() {
       </label>
       <button type="submit">Search</button>
 
-      {showContractorCard && <ContractorCard />}
+      <div>
+        <p>JSON Data:</p>
+        <pre>{jsonData}</pre>
+        {/* <ContractorCard /> */}
+      </div>
+      {/* {showContractorCard && <ContractorCard />} */}
     </form>
   );
 }

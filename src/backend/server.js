@@ -18,9 +18,9 @@ console.log(process.env.CLOUDANT_URL);
 
 const cloudant = CloudantV1.newInstance({
   authenticator: new IamAuthenticator({
-    apikey: process.env.CLOUDANT_APIKEY,
+    apikey: '7XKuFVh47HPxHkw9J5BgWrJwLkwzafYgN6KNLt0xDhUw',
   }),
-  serviceUrl: process.env.CLOUDANT_URL,
+  serviceUrl:'https://3debe265-efb1-4d02-86a8-4be42f738690-bluemix.cloudantnosqldb.appdomain.cloud',
 });
 
 const dbName = 'users';
@@ -94,39 +94,52 @@ app.post('/login', async (req, res) => {
   }
 });
 
+// Modify performSearch to handle an array of users
 const performSearch = (data, contractorName) => {
-  const searchWord = contractorName.toLowerCase();
-
+  const searchWord = contractorName;
   if (!searchWord) {
-    return []; // Empty array if no search term provided
+    return data; // Return all users if no search term provided
   }
 
   return data.filter((value) =>
-    value.contractorName.toLowerCase().includes(searchWord)
+    value.username.toLowerCase().includes(searchWord.toLowerCase())
   );
 };
 
-// Search Endpoint
+// Modify Search Endpoint
 app.post('/search', async (req, res) => {
   try {
     const { contractorName } = req.body;
-    console.log('Request body:', req.body);
+    console.log('Request body: ', contractorName, req.body);
+
+    // Fetch all users dynamically from Cloudant
+    const findAllUsersQuery = {};
+    const usersResponse = await cloudant.postFind({ db: dbName, selector: findAllUsersQuery });
+
+    // Extract data from the Cloudant response (modify this based on your Cloudant structure)
+    const data = usersResponse.result.docs;
+
+    console.log('data', data);
+    console.log('contractor', contractorName);
 
     // Perform search filtering
     const filteredData = performSearch(data, contractorName);
+
+    console.log('filtered data', filteredData);
 
     // If no results, return a 404 response
     if (filteredData.length === 0) {
       return res.status(404).json({ message: 'No results found' });
     }
-    const user = filteredData;
 
-    res.json({ message: 'Results found', user: user });
+    res.json({ message: 'Results found', users: filteredData });
   } catch (error) {
     console.error('Error in search:', error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
+
+
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
