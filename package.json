@@ -2,7 +2,7 @@
   "name": "go-contract",
   "version": "0.1.0",
   "private": true,
-  "proxy": "http://localhost:3001",
+  "proxy": "http://localhost:3000",
   "dependencies": {
     "@ibm-cloud/cloudant": "^0.8.0",
     "@testing-library/jest-dom": "^5.17.0",
