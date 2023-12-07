@@ -4,6 +4,7 @@ import Login from './components/login';
 import SignUp from './components/signup';
 import Navigation from './components/Navigation';
 import CalendarComponent from './components/Calendar';
+import ServiceRegistryClient from './components/Registry'
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
         <Route path="/signup" element={<SignUp />} />
         <Route path="/login" element={<Login />} />
         <Route path="/calendar" element={<CalendarComponent />} />
+        <Route path="/registry" element={<ServiceRegistryClient />} />
         {/* Additional routes can be added here */}
       </Routes>
     </Router>

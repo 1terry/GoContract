@@ -8,6 +8,8 @@ const Username = '1234'
 const CalendarComponent = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [events, setEvents] = useState([]);
+  const [serviceName, setServiceName] = useState('');
+  const [services, setServices] = useState([]);
   const [newEvent, setNewEvent] = useState({ username:'', date: '', title: '' });
 
   useEffect(() => {
@@ -17,8 +19,23 @@ const CalendarComponent = () => {
 
   const fetchEvents = async () => {
     try {
+      setServiceName("Calendar")
+      const service = await fetch(`http://localhost:3001/services`);
+      const Data = await service.json();
+      console.log('Received data:', Data);
+      // Assuming data is an array, filter based on serviceName
+      const ServiceData = Data.services.filter(service => service.serviceName == 'Calendar');
+      console.log(ServiceData[0].serviceURL)
+      if (!ServiceData || ServiceData.length === 0) {
+        console.error('Service unavailable');
+        setEvents([]); // Clear events if no service is available
+        return;
+      }
+      setServices(ServiceData)
+
       newEvent.username = Username
-      const response = await fetch('http://localhost:3001/events/search', {
+      console.log(services)
+      const response = await fetch(`${ServiceData[0].serviceURL}/events/search`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -45,7 +62,7 @@ const CalendarComponent = () => {
   const handleAddEvent = async () => {
     try {
       newEvent.username = Username
-      const response = await fetch('http://localhost:3001/events', {
+      const response = await fetch(`${services[0].serviceURL}/events`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -87,40 +104,42 @@ const CalendarComponent = () => {
   
   return (
     <div>
-      <h2>Calendar Example</h2>
-      <Calendar onChange={handleDateChange} value={selectedDate} tileContent={tileContent} />
-      <div>
-        <h3>Add Event</h3>
-        <label>Date:</label>
-        <input
-          type="date"
-          name="date"
-          value={newEvent.date}
-          onChange={handleInputChange}
-        />
-        <br />
-        <label>Title:</label>
-        <input
-          type="text"
-          name="title"
-          value={newEvent.title}
-          onChange={handleInputChange}
-        />
-        <br />
-        <button onClick={handleAddEvent}>Add Event</button>
-      </div>
-      <div>
-      <h3>Events on {selectedDate.toDateString()}</h3>
-      {selectedDateEvents.length > 0 ? (
-        <ul>
-          {selectedDateEvents.map((event, index) => (
-            <li key={index}>{`${event.date}: ${event.title}`}</li>
-          ))}
-        </ul>
-      ) : (
-        <p>No events on the selected date.</p>
+      {!services || services.length === 0? (
+          <p>Service not available.</p>
+        ) : (
+          <>
+          <h2>Calendar Example</h2>
+          <Calendar onChange={handleDateChange} value={selectedDate} tileContent={tileContent} />
+            <h3>Add Event</h3>
+            <label>Date:</label>
+            <input
+              type="date"
+              name="date"
+              value={newEvent.date}
+              onChange={handleInputChange}
+            />
+            <br />
+            <label>Title:</label>
+            <input
+              type="text"
+              name="title"
+              value={newEvent.title}
+              onChange={handleInputChange}
+            />
+            <br />
+            <button onClick={handleAddEvent}>Add Event</button>
+          <h3>Events on {selectedDate.toDateString()}</h3>
+          {selectedDateEvents.length > 0 ? (
+            <ul>
+              {selectedDateEvents.map((event, index) => (
+                <li key={index}>{`${event.date}: ${event.title}`}</li>
+              ))}
+            </ul>
+          ) : (
+            <p>No events on the selected date.</p>
+          )}
+        </>
       )}
-    </div>
     </div>
   );
 };
