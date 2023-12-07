@@ -17,7 +17,7 @@ function SignUp() {
       setMessage('Email and password are required');
       return;
     }
-    if (userType =="") {
+    if (userType ==="") {
       setMessage('please select a user type');
       return;
     }
@@ -32,7 +32,6 @@ function SignUp() {
 
       const data = await response.json();
       if (response.status === 201) {
-        console.log('Sign Up Successful', data);
         setMessage('Sign Up Successful!'); // Display success message
         navigate('/login');
 

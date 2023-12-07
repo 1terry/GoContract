@@ -65,7 +65,6 @@ app.post('/signup', async (req, res) => {
 // Login Endpoint
 app.post('/login', async (req, res) => {
   const { username, password } = req.body;
-  console.log('Request body:', req.body); 
 
   try {
     // Find user by username
@@ -75,24 +74,56 @@ app.post('/login', async (req, res) => {
     };
 
     const userResponse = await cloudant.postFind({ db: dbName, selector: findUser.selector });
-
     if (userResponse.result.docs.length === 0) {
       return res.status(400).send('User not found');
     }
 
     const user = userResponse.result.docs[0];
-    console.log(userResponse);
     // Compare hashed password
     const validPassword = await bcrypt.compare(password, user.password);
     if (!validPassword) {
       return res.status(400).send('Invalid password');
     }
-
-    res.json({ message: 'Logged in successfully' });
+    // Respond with a message and the userType
+    res.json({ 
+      message: 'Logged in successfully',
+      userType: user.userType // Include the userType in the response
+    });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 });
+
+// GetUser Endpoint
+app.get('/getUserInfo', async (req, res) => {
+
+  const { username } = req.query; // Assuming the username is passed as a query parameter
+
+  if (!username) {
+    return res.status(400).send('Username is required');
+  }
+
+  try {
+    // Query to find user by username
+    const findUserQuery = {
+      selector: { username: username },
+      limit: 1
+    };
+
+    const userResponse = await cloudant.postFind({ db: dbName, selector: findUserQuery.selector });
+    if (userResponse.result.docs.length === 0) {
+      return res.status(404).send('User not found');
+    }
+    const user = userResponse.result.docs[0];
+    // Return user data, excluding sensitive information like password
+    const { password, ...userData } = user;
+    res.json(userData);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
