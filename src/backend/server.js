@@ -114,11 +114,7 @@ app.post("/login", async (req, res) => {
       selector: { username: username },
       limit: 1
     };
-
-    const userResponse = await cloudant.postFind({
-      db: dbUsers,
-      selector: findUser.selector
-    });
+    const userResponse = await cloudant.postFind({ db: dbUsers, selector: findUser.selector });
     if (userResponse.result.docs.length === 0) {
       return res.status(400).send("User not found");
     }

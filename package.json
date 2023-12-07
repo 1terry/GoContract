@@ -2,10 +2,7 @@
   "name": "go-contract",
   "version": "0.1.0",
   "private": true,
-  "options": {
-    "allowedHosts": ["localhost", ".localhost"],
-    "proxy": "https://localhost:3001/"
-  },
+  "proxy": "http://localhost:3001",
   "dependencies": {
     "@ibm-cloud/cloudant": "^0.8.0",
     "@mui/material": "^5.14.20",
