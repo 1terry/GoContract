@@ -25,37 +25,26 @@ const cloudant = CloudantV1.newInstance({
 
 const dbUsers = 'users';
 const dbServices = 'contractor-trades';
+const dbBookings = 'bookings';
+const dbTrades = 'contractor-trades'
+const dbServicesRegistry = 'services';
 
 const { v4: uuidv4 } = require('uuid'); // Import UUID
 
-// POST Endpoint to add a service
-app.post('/addService', async (req, res) => {
-  const { title, description, userId } = req.body;
-  // Validate input
-  console.log("test1");
-  console.log(title);
-  console.log(description);
-  console.log(userId);
-
-  if (!title || !description || !userId) {
-    return res.status(400).send('Title, description, and user ID are required');
+app.delete('/deleteTrade', async (req, res) => {
+  const { tradeId } = req.query;
+  if (!tradeId) {
+    return res.status(400).send('Booking ID is required');
   }
-  console.log("test2");
 
   try {
-    // Create a new service document
-    const newService = {
-      title,
-      description,
-      userId, // Assuming you want to associate the service with a user
-      createdAt: new Date().toISOString() // Optional: add a timestamp
-    };
-    console.log(newService);
-
-    // Insert the document into Cloudant
-    console.log(newService);
-    const response = await cloudant.postDocument({ db: dbServices, document: newService });
-    res.status(201).json({ message: 'Service added', id: response.result.id });
+    console.log();
+    // Fetch the latest document to get the current _rev ID
+    const doc = await cloudant.getDocument({ db: dbTrades, docId: tradeId });
+    const currentRev = doc.result._rev;
+    // Now delete the document with the correct _rev ID
+    const deleteResponse = await cloudant.deleteDocument({ db: dbTrades, docId: tradeId, rev: currentRev });
+    res.status(200).json({ message: 'Booking declined', id: deleteResponse.result.id });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Internal Server Error' });
@@ -63,9 +52,35 @@ app.post('/addService', async (req, res) => {
 });
 
 
-const port = process.env.PORT || 3004;
+app.get('/getContractorTrades', async (req, res) => {
+  const { userId } = req.query; // Assuming the username is passed as a query parameter
+
+  if (!userId) {
+    return res.status(400).send('error');
+  }
+
+  try {
+    // Query to find user by username
+    const findUserQuery = {
+      selector: { contractorId: userId },
+      limit: 1
+    };
+
+    const userResponse = await cloudant.postFind({ db: dbTrades, selector: findUserQuery.selector });
+    if (userResponse.result.docs.length === 0) {
+      return res.status(404).send('User not found');
+    }
+    const contractorTrades = userResponse.result.docs;
+    // Return user data, excluding sensitive information like password
+    res.json(contractorTrades);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+const port = process.env.PORT || 3006;
+const serviceName = 'ManageTrades';
 const registryPort = 3002;
-const serviceName = "AddService"
 app.listen(port, async () => {
     console.log(`${serviceName} is running on http://localhost:${port}`);
   

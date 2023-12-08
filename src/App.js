@@ -20,7 +20,8 @@ function App() {
         <Routes>
           <Route path="/signup" element={<SignUp />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/calendar" element={<CalendarComponent />} />
+          <Route path="/calendar" element={<PrivateRoute><CalendarComponent /></PrivateRoute>} />
+          <Route path="/AddServiceForm" element={<PrivateRoute><AddServiceForm /></PrivateRoute>} />
           <Route path="/contractorDashboard" element={<PrivateRoute><ContractorDashboard /></PrivateRoute>} />
           <Route path="/manageBookings" element={<PrivateRoute><ManageBookings /></PrivateRoute>} />
           <Route path="/manageTrades" element={<PrivateRoute><ManageTrades /></PrivateRoute>} />

@@ -1,10 +1,12 @@
 // src/components/AddServiceForm.js
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 
 function AddServiceForm({ onClose, onServiceAdded }) {
   const { userData } = useAuth();
+  const navigate = useNavigate();
   const [serviceTitle, setServiceTitle] = useState('');
   const [serviceDescription, setServiceDescription] = useState('');
   const [serviceName, setServiceName] = useState('');
@@ -70,9 +72,13 @@ function AddServiceForm({ onClose, onServiceAdded }) {
   return (
     <div>
       {!services || services.length === 0? (
+        <div>
+          <button onClick={() => navigate('/contractorDashboard')}>Back</button>
           <h2>Service not available.</h2>
+        </div>
       ) : (
         <>
+        <button onClick={() => navigate('/contractorDashboard')}>Back</button>
         <h2>Add a Service</h2>
         <form onSubmit={handleSubmit}>
           <div>

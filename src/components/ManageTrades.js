@@ -8,11 +8,23 @@ function ManageTrades() {
   const navigate = useNavigate();
   const [trades, setTrades] = useState([]);
   const [showForm, setShowForm] = useState(false);
+  const [serviceName, setServiceName] = useState('');
+  const [services, setServices] = useState([]);
 
   // Define the fetchTrades function
   const fetchTrades = async () => {
     try {
-      const response = await fetch(`/getContractorTrades?userId=${userData.userId}`);
+      setServiceName("ManageTrades")
+        const service = await fetch(`http://localhost:3002/services`);
+        const Data = await service.json();
+        // Assuming data is an array, filter based on serviceName
+        const ServiceData = Data.services.filter(service => service.serviceName == 'ManageTrades');
+        if (!ServiceData || ServiceData.length === 0) {
+          console.error('Service unavailable');
+          return;
+        }
+        setServices(ServiceData)
+      const response = await fetch(`${ServiceData[0].serviceURL}/getContractorTrades?userId=${userData.userId}`);
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
@@ -41,7 +53,7 @@ function ManageTrades() {
 
   const handleDelete = async (tradeId) => {
     try {
-      const response = await fetch(`/deleteTrade?tradeId=${tradeId}`, { method: 'DELETE' });
+      const response = await fetch(`${services[0].serviceURL}/deleteTrade?tradeId=${tradeId}`, { method: 'DELETE' });
       if (!response.ok) {
         throw new Error('Failed to delete trade');
       }
@@ -55,7 +67,14 @@ function ManageTrades() {
 
   return (
     <div>
-      <button onClick={() => navigate('/contractorDashboard')}>Back to Dashboard</button>
+    {!services || services.length === 0? (
+      <div>
+        <button onClick={() => navigate('/contractorDashboard')}>Back</button>
+        <h2>Service not available.</h2>
+      </div>
+      ) : (
+        <>
+        <button onClick={() => navigate('/contractorDashboard')}>Back to Dashboard</button>
       <h2>Manage Trades</h2>
       <button onClick={() => setShowForm(true)}>Add a Trade</button>
       {showForm && (
@@ -71,6 +90,8 @@ function ManageTrades() {
           </div>
         ))}
       </div>
+      </>
+    )}
     </div>
   );
 }

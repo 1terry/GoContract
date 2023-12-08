@@ -3,10 +3,11 @@ import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import './Calendar.css';
 import { useAuth } from '../context/AuthContext';
-import { useAuth } from '../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 const CalendarComponent = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
+  const navigate = useNavigate();
   const [events, setEvents] = useState([]);
   const [serviceName, setServiceName] = useState('');
   const [services, setServices] = useState([]);
@@ -134,9 +135,13 @@ const CalendarComponent = () => {
   return (
     <div>
       {!services || services.length === 0? (
+        <div>
+          <button onClick={() => navigate('/contractorDashboard')}>Back</button>
           <h2>Service not available.</h2>
+        </div>
         ) : (
           <>
+          <button onClick={() => navigate('/contractorDashboard')}>Back</button>
           <h2>Calendar</h2>
           <Calendar onChange={handleDateChange} value={selectedDate} tileContent={tileContent} />
             <h3>Add Event</h3>
