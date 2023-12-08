@@ -34,11 +34,15 @@ function ContractorDashboard() {
         <button onClick={() => setActiveTab('registry')}>Services Provided</button>
       </nav>
       <div>Hello {userData.firstName}!</div>
-      {/* <button onClick={() => setShowForm(true)}>Add a Service</button>
-      {showForm && (
-        <AddServiceForm onClose={() => setShowForm(false)} />
-      )} */}
-      {renderTabContent()}
+    
+      {userData.canManageBookings && (
+        <button onClick={() => navigate('/manageBookings')}>Manage Bookings</button>
+      )}
+      {userData.canManageTrades && (
+        <button onClick={() => navigate('/manageTrades')}>Manage Trades</button>
+      )}
+      <button onClick={() => navigate('/contractorProfile')}>My Profile</button>
+
     </div>
   );
 }
