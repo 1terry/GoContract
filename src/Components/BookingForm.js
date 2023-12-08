@@ -1,18 +1,19 @@
 import React, { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from "react-router-dom";
 import Calendar from "react-calendar";
 import CalendarComponent from "./Calendar";
-import 'react-calendar/dist/Calendar.css';
-import './booking.css';
+import "react-calendar/dist/Calendar.css";
+import "./booking.css";
 
 function BookingForm() {
   const { state } = useLocation();
   const { userData } = useAuth();
   const [showCalendar, setShowCalendar] = useState(false);
+  const navigate = useNavigate();
 
   // Destructure values from state or provide default values
-  const { contractorName = '', contractorId = '' } = state || {};
+  const { contractorName = "", contractorId = "" } = state || {};
 
   const [date, setDate] = useState("");
   const [typeOfService, setTypeOfService] = useState("");
@@ -32,17 +33,17 @@ function BookingForm() {
       console.log(state);
       console.log(contractorId);
       console.log(userData.userId);
-      console.log('date');
+      console.log("date");
       console.log(typeOfService);
       console.log(serviceDetails);
       console.log(contractorName);
-      var clientName =userData.firstName + " " + userData.lastName;
+      var clientName = userData.firstName + " " + userData.lastName;
       console.log(clientName);
 
-      const response = await fetch('http://localhost:3001/addBooking', {
+      const response = await fetch("http://localhost:3001/addBooking", {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
+          "Content-Type": "application/json"
         },
         body: JSON.stringify({
           contractorId: contractorId,
@@ -54,10 +55,10 @@ function BookingForm() {
           date: "2023-12-08",
           typeOfService: typeOfService,
           serviceDetails: serviceDetails,
-          status: false,
-        }),
+          status: false
+        })
       });
-      
+
       console.log(response);
 
       if (!response.ok) {
@@ -76,9 +77,10 @@ function BookingForm() {
 
   return (
     <div className="container">
-      
+      <button onClick={() => navigate("/dashboard")}>Back</button>
+
       <form onSubmit={handleSubmit}>
-      <h1>Booking with {contractorName}</h1>
+        <h1>Booking with {contractorName}</h1>
         <label>
           Select Date:
           <button type="button" onClick={openCalendar}>
