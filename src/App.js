@@ -8,6 +8,8 @@ import ConditionalNavigation from './components/conditionalNavigation';
 import PrivateRoute from './components/PrivateRoute'; 
 import Dashboard from './components/dashboard';
 import Bookings from './components/BookingForm';
+import CalendarComponent from './components/Calendar';
+
 
 function App() {
   return (
