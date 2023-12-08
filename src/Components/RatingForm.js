@@ -1,15 +1,16 @@
 import React, { useState } from "react";
 import { useLocation } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 
 
 import { useAuth } from "../context/AuthContext";
 
 function RatingForm() {
-    const { state } = useLocation();
-
+  const { state } = useLocation();
+  const navigate = useNavigate();
   const { userData } = useAuth();
 
-  const [ratingValue, setRatingValue] = useState(0);
+  const [ratingValue, setRatingValue] = useState(1);
   const [ratingText, setRatingText] = useState("");
   const { contractorName = '', contractorId = '' } = state || {};
 
@@ -45,6 +46,7 @@ function RatingForm() {
  
       const result = await response.json();
       console.log("Rating added", result);
+      navigate("/dashboard");
     } catch (error) {
       console.error("Error submitting ratings", error);
     }
@@ -59,7 +61,7 @@ function RatingForm() {
         <h1>Rate {contractorName }</h1>
         <br></br>
         <label htmlFor="ratingDropdown">Select a Rating:</label>
-        <select id="ratingDropdown" value={ratingValue} onChange={handleChange}>
+        <select id="ratingDropdown" value={ratingValue}  onChange={handleChange}>
           {[1, 2, 3, 4, 5].map((number) => (
             <option key={number} value={number}>
               {number}
