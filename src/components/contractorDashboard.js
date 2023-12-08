@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import CalendarComponent from './Calendar';
 
 function ContractorDashboard() {
   const { userData } = useAuth();
@@ -20,6 +21,7 @@ function ContractorDashboard() {
 
       <button onClick={() => navigate('/manageBookings')}>Manage Bookings</button>
       <button onClick={() => navigate('/manageTrades')}>Manage Trades</button>
+      <CalendarComponent/>
     </div>
   );
 }
