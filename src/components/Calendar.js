@@ -3,6 +3,7 @@ import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import './Calendar.css';
 import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../context/AuthContext';
 
 const CalendarComponent = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -105,7 +106,7 @@ const CalendarComponent = () => {
     if (view === 'month') {
       const dateKey = date.toISOString().split('T')[0];
       const dateEvents = events.filter((event) => event.date === dateKey);
-      const combinedArray = [...dateEvents, ...bookings.filter((book) => book.date.split('T')[0] === dateKey)];
+      const combinedArray = [...dateEvents, ...bookings.filter((book) => book.date.split('T')[0] === dateKey && book.status)];
       if (combinedArray.length > 0) {
         const firstEvent = combinedArray[0]; // Display only the first event
         if (dateEvents < 1){
@@ -127,7 +128,7 @@ const CalendarComponent = () => {
   };
   const selectedDateKey = selectedDate.toISOString().split('T')[0];
   const selectedDateEvents = events.filter((event) => event.date === selectedDateKey);
-  const selectedDateBookings = bookings.filter((book) => book.date.split('T')[0] === selectedDateKey)
+  const selectedDateBookings = bookings.filter((book) => book.date.split('T')[0] === selectedDateKey && book.status)
 
   
   return (

@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 
 
-function AddServiceForm({ onClose }) {
+function AddServiceForm({ onClose, onServiceAdded }) {
   const { userData } = useAuth();
   const [serviceTitle, setServiceTitle] = useState('');
   const [serviceDescription, setServiceDescription] = useState('');
@@ -44,9 +44,10 @@ function AddServiceForm({ onClose }) {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          title: serviceTitle,
+          trade: serviceTitle,
           description: serviceDescription,
-          userId: userData.userId // Assuming userData contains userId
+          contractorId: userData.userId, // Assuming userData contains userId
+          contractorName: userData.firstName.concat(' ',userData.lastName)
         }),
       });
   
@@ -56,6 +57,7 @@ function AddServiceForm({ onClose }) {
   
       const result = await response.json();
       console.log('Service added:', result);
+      onServiceAdded(); 
       onClose(); // Close form on successful submission
     } catch (error) {
       console.error('Error submitting service:', error);

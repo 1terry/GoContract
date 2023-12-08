@@ -7,8 +7,10 @@ import ContractorDashboard from './components/contractorDashboard';
 import ConditionalNavigation from './components/conditionalNavigation';
 import PrivateRoute from './components/PrivateRoute'; 
 import Navigation from './components/Navigation';
-import CalendarComponent from './components/Calendar';
 import AddServiceForm from './components/AddServiceForm';
+import CalendarComponent from './components/Calendar';
+import ManageBookings from './components/ManageBookings'; 
+import ManageTrades from './components/ManageTrades';
 
 function App() {
   return (
@@ -18,8 +20,10 @@ function App() {
         <Routes>
           <Route path="/signup" element={<SignUp />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/calendar" element={<CalendarComponent/>}/>
+          <Route path="/calendar" element={<CalendarComponent />} />
           <Route path="/contractorDashboard" element={<PrivateRoute><ContractorDashboard /></PrivateRoute>} />
+          <Route path="/manageBookings" element={<PrivateRoute><ManageBookings /></PrivateRoute>} />
+          <Route path="/manageTrades" element={<PrivateRoute><ManageTrades /></PrivateRoute>} />
         </Routes>
       </Router>
     </AuthProvider>
