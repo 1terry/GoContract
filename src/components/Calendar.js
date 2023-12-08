@@ -19,7 +19,6 @@ const CalendarComponent = () => {
   const fetchEvents = async () => {
     try {
       newEvent.userId = userData.userId
-      newEvent.userId = "194084ad-7581-4e4e-9bc6-c5214d53eb4d"
       const response = await fetch(`http://localhost:3001/events/search`, {
         method: 'POST',
         headers: {
@@ -69,7 +68,7 @@ const CalendarComponent = () => {
 
   const handleDelete = async (eventId) =>{
     try {
-      const response = await fetch(`${services[0].serviceURL}/deleteEvent?eventId=${eventId}`, { method: 'DELETE' });
+      const response = await fetch(`http://localhost:3001/deleteEvent?eventId=${eventId}`, { method: 'DELETE' });
       if (!response.ok) {
         throw new Error('Failed to delete trade');
       }
@@ -84,7 +83,6 @@ const CalendarComponent = () => {
   const handleAddEvent = async () => {
     try {
       newEvent.userId = userData.userId
-      newEvent.userId = "194084ad-7581-4e4e-9bc6-c5214d53eb4d"
       const response = await fetch(`http://localhost:3001/events`, {
         method: 'POST',
         headers: {
@@ -159,7 +157,9 @@ const CalendarComponent = () => {
             {(selectedDateEvents.length > 0 || selectedDateBookings.length > 0) && (
               <ul>
                 {selectedDateEvents.map((event, index) => (
-                  <li key={index}>{`${event.date} - Event: ${event.title}`}</li>
+                  <li key={index}>{`${event.date} - Event: ${event.title}`}
+                  <br></br>
+                  <button onClick={() => handleDelete(event._id)}>Delete</button></li>
                 ))}
                 {selectedDateBookings.map((book, index) => (
                   <li key={index}>{`${book.date.split('T')[0]} - Booking Service: ${book.typeOfService} - Descrtipion: ${book.serviceDetails}`}</li>
