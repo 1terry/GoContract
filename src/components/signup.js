@@ -57,62 +57,111 @@ function SignUp() {
   };
 
   return (
+
+
+    <div className="loginBox">
+    <img className="user" src="https://i.ibb.co/yVGxFPR/2.png" height="100px" width="100px" alt="User" />
+    <h3>Sign up here</h3>
     <form onSubmit={handleSubmit}>
-      <h2>Sign Up</h2>
-      {message && <div>{message}</div>} {/* Display messages to the user */}
-      <label>
-        First Name:
-        <input
+      <div className="inputBox">
+        <input   
           value={firstName}
           onChange={(e) => setFirstName(e.target.value)}
-        />
-      </label>
-      <label>
-        Last Name:
-        <input value={lastName} onChange={(e) => setLastName(e.target.value)} />
-      </label>
-      <label>
-        Address:
-        <input value={address} onChange={(e) => setAddress(e.target.value)} />
-      </label>
-      <label>
-        Phone Number:
-        <input
-          value={phoneNumber}
+          placeholder="first name" />
+        
+        <input 
+          value={lastName} onChange={(e) => setLastName(e.target.value)}
+          placeholder="last name" />
+        
+        <input 
+        value={address} onChange={(e) => setAddress(e.target.value)}
+        placeholder="address" />
+
+        <input 
           onChange={(e) => setPhoneNumber(e.target.value)}
-        />
-      </label>
-      <br></br>
-      <label>
-        Email:
-        <input
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-      </label>
-      <label>
-        User Type
+          placeholder="phone number" />
+
+        <input 
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="email" />
+
         <select value={userType} onChange={(e) => setUserType(e.target.value)}>
           <option value="" disabled selected>
-            Select User Type
+          Select User Type
           </option>
           <option value="contractor">Contractor</option>
           <option value="homeowner">Home Owner</option>
-        </select>
-      </label>
-      <br></br>
-      <label>
-        Password:
-        <input
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-      </label>
-      <br></br>
-      <button type="submit">Sign Up</button>
+          </select>
+
+          <input 
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+      </div>
+      <input type="submit" name="" value="Sign up" />
     </form>
+    <div className="text-center">
+      {/* <p style={{ color: '#59238F' }}>Sign-Up</p> */}
+    </div>
+  </div>
+
+    // <form onSubmit={handleSubmit}>
+    //   <h2>Sign Up</h2>
+    //   {message && <div>{message}</div>} {/* Display messages to the user */}
+    //   <label>
+    //     First Name:
+    //     <input
+    //       value={firstName}
+    //       onChange={(e) => setFirstName(e.target.value)}
+    //     />
+    //   </label>
+    //   <label>
+    //     Last Name:
+    //     <input value={lastName} onChange={(e) => setLastName(e.target.value)} />
+    //   </label>
+    //   <label>
+    //     Address:
+    //     <input value={address} onChange={(e) => setAddress(e.target.value)} />
+    //   </label>
+    //   <label>
+    //     Phone Number:
+    //     <input
+    //       value={phoneNumber}
+    //       onChange={(e) => setPhoneNumber(e.target.value)}
+    //     />
+    //   </label>
+    //   <br></br>
+    //   <label>
+    //     Email:
+    //     <input
+    //       type="email"
+    //       value={email}
+    //       onChange={(e) => setEmail(e.target.value)}
+    //     />
+    //   </label>
+    //   <label>
+    //     User Type
+    //     <select value={userType} onChange={(e) => setUserType(e.target.value)}>
+    //       <option value="" disabled selected>
+    //         Select User Type
+    //       </option>
+    //       <option value="contractor">Contractor</option>
+    //       <option value="homeowner">Home Owner</option>
+    //     </select>
+    //   </label>
+    //   <br></br>
+    //   <label>
+    //     Password:
+    //     <input
+    //       type="password"
+    //       value={password}
+    //       onChange={(e) => setPassword(e.target.value)}
+    //     />
+    //   </label>
+    //   <br></br>
+    //   <button type="submit">Sign Up</button>
+    // </form>
   );
 }
 

@@ -102,21 +102,22 @@ function Dashboard() {
 
   return (
     <form onSubmit={handleSearchClick} className='container-search'>
-      <h2>Search</h2>
-      {message && <div>{message}</div>}
-      <label>
-        Search for contractor
-        <input 
-          type="text" 
-          value={contractorName} 
-          onChange={(e) => setContractorName(e.target.value)} 
-        />
-      </label>
-      <label><input type="radio" name="options" value="byName" checked={selectedOption === "byName"} onChange={handleRadioChange}/>Search by Name</label>
-      <label><input type="radio" name="options" value="byType" checked={selectedOption === "byType"} onChange={handleRadioChange}/>Search by Trade Type</label>
+      <div className='searchBar'>
+        <h2>Search</h2>
+        {message && <div>{message}</div>}
+        <label>
+          Search for contractor
+          <input 
+            type="text" 
+            value={contractorName} 
+            onChange={(e) => setContractorName(e.target.value)} 
+          />
+        </label>
+        <label><input type="radio" name="options" value="byName" checked={selectedOption === "byName"} onChange={handleRadioChange}/>Search by Name</label>
+        <label><input type="radio" name="options" value="byType" checked={selectedOption === "byType"} onChange={handleRadioChange}/>Search by Trade Type</label>
 
-      <button type="submit">Search</button>
-
+        <button type="submit">Search</button>
+      </div>
       <div>
         {/* <p>JSON Data:</p> */}
         {/* <pre>{jsonData}</pre> */}
