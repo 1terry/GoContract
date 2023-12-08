@@ -12,6 +12,7 @@ import CalendarComponent from './components/Calendar';
 import ManageBookings from './components/ManageBookings'; 
 import ManageTrades from './components/ManageTrades';
 import ContractorProfile from './components/contractorProfile';
+import ServiceRegistryClient from './components/Registry'
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
           <Route path="/manageBookings" element={<PrivateRoute><ManageBookings /></PrivateRoute>} />
           <Route path="/manageTrades" element={<PrivateRoute><ManageTrades /></PrivateRoute>} />
           <Route path="/contractorProfile" element={<PrivateRoute><ContractorProfile /></PrivateRoute>} />
+          <Route path="/registry" element={<PrivateRoute><ServiceRegistryClient /></PrivateRoute>} />
 
         </Routes>
       </Router>

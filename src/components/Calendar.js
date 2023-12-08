@@ -75,6 +75,19 @@ const CalendarComponent = () => {
     setSelectedDate(date);
     // Additional actions based on the selected date
   };
+  const handleDelete = async (eventId) =>{
+    try {
+      const response = await fetch(`${services[0].serviceURL}/deleteEvent?eventId=${eventId}`, { method: 'DELETE' });
+      if (!response.ok) {
+        throw new Error('Failed to delete trade');
+      }
+
+      // Update the state to remove the deleted trade
+      setEvents(events => events.filter(events => events._id !== eventId));
+    } catch (error) {
+      console.error('Error deleting trade:', error);
+    }
+  }
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -127,21 +140,22 @@ const CalendarComponent = () => {
     }
     return null;
   };
-  const selectedDateKey = selectedDate.toISOString().split('T')[0];
-  const selectedDateEvents = events.filter((event) => event.date === selectedDateKey);
-  const selectedDateBookings = bookings.filter((book) => book.date.split('T')[0] === selectedDateKey && book.status)
+
+const selectedDateKey = selectedDate.toISOString().split('T')[0];
+const selectedDateEvents = events.filter((event) => event.date === selectedDateKey);
+const selectedDateBookings = bookings.filter((book) => book.date.split('T')[0] === selectedDateKey && book.status)
+
 
   
   return (
     <div>
       {!services || services.length === 0? (
         <div>
-          <button onClick={() => navigate('/contractorDashboard')}>Back</button>
           <h2>Service not available.</h2>
+          <button onClick={() => navigate('/contractorDashboard')}>Back</button>
         </div>
         ) : (
           <>
-          <button onClick={() => navigate('/contractorDashboard')}>Back</button>
           <h2>Calendar</h2>
           <Calendar onChange={handleDateChange} value={selectedDate} tileContent={tileContent} />
             <h3>Add Event</h3>
@@ -166,7 +180,8 @@ const CalendarComponent = () => {
             {(selectedDateEvents.length > 0 || selectedDateBookings.length > 0) && (
               <ul>
                 {selectedDateEvents.map((event, index) => (
-                  <li key={index}>{`${event.date} - Event: ${event.title}`}</li>
+                  <li key={index}>{`${event.date} - Event: ${event.title}`}
+                  <button onClick={() => handleDelete(event._id)}>Delete</button></li>
                 ))}
                 {selectedDateBookings.map((book, index) => (
                   <li key={index}>{`${book.date.split('T')[0]} - Booking Service: ${book.typeOfService} - Descrtipion: ${book.serviceDetails}`}</li>
@@ -176,6 +191,7 @@ const CalendarComponent = () => {
             {!(selectedDateEvents.length > 0 || selectedDateBookings.length > 0) && (
               <p>No events or bookings on the selected date.</p>
             )}
+            <button onClick={() => navigate('/contractorDashboard')}>Back</button>
         </>
       )}
     </div>

@@ -36,7 +36,6 @@ app.post('/addService', async (req, res) => {
   if (!trade || !description || !contractorId) {
     return res.status(400).send('trade, description, and user ID are required');
   }
-  console.log("test2");
 
   try {
     // Create a new service document
@@ -47,10 +46,8 @@ app.post('/addService', async (req, res) => {
       contractorId, // Assuming you want to associate the service with a user
       createdAt: new Date().toISOString() // Optional: add a timestamp
     };
-    console.log(newService);
 
     // Insert the document into Cloudant
-    console.log(newService);
     const response = await cloudant.postDocument({ db: dbServices, document: newService });
     res.status(201).json({ message: 'Service added', id: response.result.id });
   } catch (error) {

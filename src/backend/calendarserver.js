@@ -97,6 +97,25 @@ app.post('/events', async (req, res) => {
   }
 });
 
+app.delete('/deleteEvent', async (req, res) => {
+  const { eventId } = req.query;
+  if (!eventId) {
+    return res.status(400).send('Event is required');
+  }
+
+  try {
+    // Fetch the latest document to get the current _rev ID
+    const doc = await cloudant.getDocument({ db: dbEvents, docId: eventId });
+    const currentRev = doc.result._rev;
+    // Now delete the document with the correct _rev ID
+    const deleteResponse = await cloudant.deleteDocument({ db: dbEvents, docId: eventId, rev: currentRev });
+    res.status(200).json({ message: 'Event deleted', id: deleteResponse.result.id });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
 const port = process.env.PORT || 3003;
 const serviceName = 'Calendar';
 const registryPort = 3002;

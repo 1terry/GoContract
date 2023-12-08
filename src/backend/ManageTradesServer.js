@@ -38,7 +38,6 @@ app.delete('/deleteTrade', async (req, res) => {
   }
 
   try {
-    console.log();
     // Fetch the latest document to get the current _rev ID
     const doc = await cloudant.getDocument({ db: dbTrades, docId: tradeId });
     const currentRev = doc.result._rev;

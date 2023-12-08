@@ -42,6 +42,7 @@ const ServiceRegistryClient = () => {
 
   return (
     <div>
+      <button onClick={() => navigate('/contractorDashboard')}>Back</button>
       <h2>Available Services</h2>
       <ul>
       {services.map((service) => (
