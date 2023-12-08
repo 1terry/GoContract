@@ -96,14 +96,48 @@ app.post('/login', async (req, res) => {
 
 let events = [];
 const dbEvents = 'events';
+const dbBookings = 'bookings';
 
 app.post('/events/search', async (req, res) => {
-  const {username, date, title } = req.body;
+  const {userId, date, title } = req.body;
   try {
     const findUserEvents = {
-      selector: { username: username },
+      selector: { userId: userId },
     };
     const eventsData = await cloudant.postFind({ db: dbEvents, selector: findUserEvents.selector });
+    const jsonResponse = JSON.parse(JSON.stringify(eventsData.result));
+    const { docs } = eventsData.result;
+    res.json(docs)
+  } catch (error) {
+    console.error('Error reading events:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+app.post('/bookings/contractorsearch', async (req, res) => {
+  const {userId, date, title } = req.body;
+  try {
+    const findUserEvents = {
+      selector: { contractorId: userId },
+    };
+    const eventsData = await cloudant.postFind({ db: dbBookings, selector: findUserEvents.selector });
+    const jsonResponse = JSON.parse(JSON.stringify(eventsData.result));
+    const { docs } = eventsData.result;
+    console.log(docs)
+    res.json(docs)
+  } catch (error) {
+    console.error('Error reading events:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+app.post('/bookings/clientsearch', async (req, res) => {
+  const {userId, date, title } = req.body;
+  try {
+    const findUserEvents = {
+      selector: { contractorId: userId },
+    };
+    const eventsData = await cloudant.postFind({ db: dbBookings, selector: findUserEvents.selector });
     const jsonResponse = JSON.parse(JSON.stringify(eventsData.result));
     const { docs } = eventsData.result;
     res.json(docs)
@@ -115,7 +149,7 @@ app.post('/events/search', async (req, res) => {
 // POST endpoint to add a new event
 
 app.post('/events', async (req, res) => {
-  const {username, date, title } = req.body;
+  const {userId, date, title } = req.body;
   console.log('Request body:', req.body); 
 
   if (!date || !title) {
@@ -123,7 +157,7 @@ app.post('/events', async (req, res) => {
   }
 
   try {
-    const newEvent = {username, date, title};
+    const newEvent = {userId, date, title};
     events.push(newEvent);
 
     // Add new event to Cloudant
