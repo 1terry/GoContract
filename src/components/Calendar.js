@@ -181,6 +181,7 @@ const selectedDateBookings = bookings.filter((book) => book.date.split('T')[0] =
               <ul>
                 {selectedDateEvents.map((event, index) => (
                   <li key={index}>{`${event.date} - Event: ${event.title}`}
+                  <br></br>
                   <button onClick={() => handleDelete(event._id)}>Delete</button></li>
                 ))}
                 {selectedDateBookings.map((book, index) => (
