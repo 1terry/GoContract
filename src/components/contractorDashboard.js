@@ -17,9 +17,15 @@ function ContractorDashboard() {
         {/* Your nav elements */}
       </nav>
       <div>Hello {userData.firstName}!</div>
+    
+      {userData.canManageBookings && (
+        <button onClick={() => navigate('/manageBookings')}>Manage Bookings</button>
+      )}
+      {userData.canManageTrades && (
+        <button onClick={() => navigate('/manageTrades')}>Manage Trades</button>
+      )}
+      <button onClick={() => navigate('/contractorProfile')}>My Profile</button>
 
-      <button onClick={() => navigate('/manageBookings')}>Manage Bookings</button>
-      <button onClick={() => navigate('/manageTrades')}>Manage Trades</button>
     </div>
   );
 }
