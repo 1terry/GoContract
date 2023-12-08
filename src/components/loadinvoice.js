@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
+import { useAuth } from "../context/AuthContext";
 
 // loading the invoice (only for users)
 function LoadInvoice({ data }) {
   const [invoice, setinvoice] = useState("");
   const [message, setMessage] = useState("");
   const [enteredInvoiceId, setInvoiceId] = useState("");
+  const { userData } = useAuth();
   var item;
 
   const grabData = async () => {
