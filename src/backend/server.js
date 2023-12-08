@@ -362,6 +362,11 @@ app.get("/getUserInfo", async (req, res) => {
 // POST Endpoint to add a service
 app.post("/addService", async (req, res) => {
   const { trade, description, contractorId, contractorName } = req.body;
+  console.log("trade:", trade);
+  console.log("desc:", description);
+  console.log("id:", contractorId);
+  console.log("name:", contractorName);
+
 
   if (!trade || !description || !contractorId) {
     return res.status(400).send("trade, description, and user ID are required");

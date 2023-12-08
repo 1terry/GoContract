@@ -148,7 +148,7 @@ const handleDeleteAccount = async () => {
       </label>
       <br></br>
       <button onClick={handleDeleteAccount}>Delete Account</button>
-      <button onClick={handleLogout}>Logout</button>
+      <button onClick={handleLogout}>Logout</button> 
 
     </div>
   );

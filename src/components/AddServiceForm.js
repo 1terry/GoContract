@@ -11,7 +11,7 @@ function AddServiceForm({ onClose, onServiceAdded }) {
     event.preventDefault();
 
     try {
-      const response = await fetch("/addService", {
+      const response = await fetch("http://localhost:3001/addService", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"

@@ -13,7 +13,7 @@ function ManageTrades() {
   const fetchTrades = async () => {
     try {
       const response = await fetch(
-        `/getContractorTrades?userId=${userData.userId}`
+        `http://localhost:3001/getContractorTrades?userId=${userData.userId}`
       );
       if (!response.ok) {
         throw new Error("Network response was not ok");
@@ -43,7 +43,7 @@ function ManageTrades() {
 
   const handleDelete = async (tradeId) => {
     try {
-      const response = await fetch(`/deleteTrade?tradeId=${tradeId}`, {
+      const response = await fetch(`http://localhost:3001/deleteTrade?tradeId=${tradeId}`, {
         method: "DELETE"
       });
       if (!response.ok) {
