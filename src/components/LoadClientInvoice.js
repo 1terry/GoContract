@@ -7,7 +7,33 @@ function LoadInvoice({ data }) {
   const [message, setMessage] = useState("");
   const [enteredInvoiceId, setInvoiceId] = useState("");
   const { userData } = useAuth();
+  const [serviceName, setServiceName] = useState('');
+  const [services, setServices] = useState([]);
   var item;
+
+  useEffect(() => {
+    // Fetch events from your database
+    fetchEvents();
+  }, []); // Empty dependency array ensures the effect runs once on component mount
+
+  const fetchEvents = async () => {
+    try {
+      setServiceName("Invoice")
+      const service = await fetch(`http://localhost:3002/services`);
+      const Data = await service.json();
+      console.log('Received data:', Data);
+      // Assuming data is an array, filter based on serviceName
+      const ServiceData = Data.services.filter(service => service.serviceName == 'Invoice');
+      console.log(ServiceData[0].serviceURL)
+      if (!ServiceData || ServiceData.length === 0) {
+        console.error('Service unavailable');
+        return;
+      }
+      setServices(ServiceData)
+    } catch (error) {
+      console.error('Error fetching service:', error);
+    }
+  };
 
   const grabData = async () => {
     setMessage("");
@@ -16,7 +42,7 @@ function LoadInvoice({ data }) {
     try {
       // try hitting the endpoint and loading the data
       const response = await fetch(
-        `/getInvoice?identifier=${enteredInvoiceId}`
+        `${services[0].serviceURL}/getInvoice?identifier=${enteredInvoiceId}`
       );
       if (!response.ok) {
         throw new Error("Network error");
@@ -30,7 +56,7 @@ function LoadInvoice({ data }) {
 
   const deletingInvoice = async () => {
     try {
-      const response = await fetch(`/deleteInvoice?invoiceId=${invoice._id}`, {
+      const response = await fetch(`${services[0].serviceURL}/deleteInvoice?invoiceId=${invoice._id}`, {
         method: "DELETE"
       });
 
@@ -45,7 +71,14 @@ function LoadInvoice({ data }) {
 
   return (
     <div>
-      <label>
+            {!services || services.length === 0? (
+        <div>
+          <button onClick={() => navigate('/contractorDashboard')}>Back</button>
+          <h2>Service not available.</h2>
+        </div>
+      ) : (
+        <>
+        <label>
         Enter an invoice id:
         <input
           placeholder="Enter invoice id"
@@ -97,6 +130,8 @@ function LoadInvoice({ data }) {
         </div>
       )}
       {message && <div>{message}</div>}
+        </>
+      )}
     </div>
   );
 }

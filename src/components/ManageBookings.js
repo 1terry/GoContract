@@ -112,16 +112,30 @@ function ManageBookings() {
 
   const handleInvoiceClick = async (bookingId, clientEmail) => {
     try {
+      const service = await fetch(`http://localhost:3002/services`);
+      const Data = await service.json();
+      const ServiceData = Data.services.filter(service => service.serviceName == 'Invoice');
+        if (!ServiceData || ServiceData.length === 0) {
+          console.error('Service unavailable');
+          return;
+        }
       const response = await fetch(
-        `/getInvoiceByBookingId?identifier=${bookingId}`
+        `${ServiceData[0].serviceURL}/getInvoiceByBookingId?identifier=${bookingId}`
       );
 
       const invoice = await response.json();
       if (invoice) {
-        navigate("/getInvoice", { state: { invoiceId: invoice.invoiceId } });
+        navigate(`/getInvoice`, { state: { invoiceId: invoice.invoiceId } });
       }
     } catch (error) {
-      navigate("/invoice", {
+      const service = await fetch(`http://localhost:3002/services`);
+      const Data = await service.json();
+      const ServiceData = Data.services.filter(service => service.serviceName == 'Invoice');
+        if (!ServiceData || ServiceData.length === 0) {
+          console.error('Service unavailable');
+          return;
+        }
+      navigate(`/invoice`, {
         state: { bookingId: bookingId, clientEmail: clientEmail }
       });
     }
@@ -169,6 +183,13 @@ function ManageBookings() {
                 <p>Date: {new Date(booking.date).toLocaleDateString()}</p>
                 <p>Client ID: {booking.clientId}</p>
                 <button onClick={() => handleDecline(booking._id)}>Cancel Job</button>
+                  <button
+                    onClick={() =>
+                      handleInvoiceClick(booking._id, booking.clientEmail)
+                    }
+                  >
+                    Invoice
+                  </button>
               </div>
             ))}
         </div>

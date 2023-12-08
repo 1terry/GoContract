@@ -25,6 +25,8 @@ const ServiceRegistryClient = () => {
         return (<button onClick={() => navigate('/manageBookings')}>Manage Bookings</button>)
       case 'ManageTrades':
         return (<button onClick={() => navigate('/manageTrades')}>Manage Trades</button>)
+      case 'Invoice':
+        return (<button onClick={() => navigate('/manageBookings')}>Invoice</button>)
       default:
         return <div></div>;
     }
