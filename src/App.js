@@ -7,6 +7,7 @@ import ContractorDashboard from './components/contractorDashboard';
 import ConditionalNavigation from './components/conditionalNavigation';
 import PrivateRoute from './components/PrivateRoute'; 
 import ManageBookings from './components/ManageBookings'; 
+import ManageTrades from './components/ManageTrades';
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/contractorDashboard" element={<PrivateRoute><ContractorDashboard /></PrivateRoute>} />
           <Route path="/manageBookings" element={<PrivateRoute><ManageBookings /></PrivateRoute>} />
+          <Route path="/manageTrades" element={<PrivateRoute><ManageTrades /></PrivateRoute>} />
         </Routes>
       </Router>
     </AuthProvider>

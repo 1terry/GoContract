@@ -24,14 +24,15 @@ const cloudant = CloudantV1.newInstance({
 });
 
 const dbUsers = 'users';
-const dbServices = 'services';
+const dbServices = 'contractor-trades';
 const dbBookings = 'bookings';
+const dbTrades = 'contractor-trades'
 
 const { v4: uuidv4 } = require('uuid'); // Import UUID
 
 // Signup Endpoint
 app.post('/signup', async (req, res) => {
-  const { firstName, lastName, username, password, userType } = req.body;
+  const { firstName, lastName, address, phoneNumber, username, password, userType } = req.body;
   console.log('Request body:', req.body);
 
   if (!username || !password || !firstName) {
@@ -58,7 +59,7 @@ app.post('/signup', async (req, res) => {
     }
 
     // Add new user to Cloudant
-    const user = { userId, firstName, lastName, username, password: hashedPassword, userType };
+    const user = { userId, firstName, lastName, address, phoneNumber, username, password: hashedPassword, userType };
     const response = await cloudant.postDocument({ db: dbUsers, document: user });
 
     res.status(201).json({ message: 'User created', id: response.result.id, userId });
@@ -133,24 +134,21 @@ app.get('/getUserInfo', async (req, res) => {
 
 // POST Endpoint to add a service
 app.post('/addService', async (req, res) => {
-  const { title, description, userId } = req.body;
-  // Validate input
-  console.log("test1");
-  console.log(title);
-  console.log(description);
-  console.log(userId);
+  const { trade, description, contractorId, contractorName } = req.body;
 
-  if (!title || !description || !userId) {
-    return res.status(400).send('Title, description, and user ID are required');
+
+  if (!trade || !description || !contractorId) {
+    return res.status(400).send('trade, description, and user ID are required');
   }
   console.log("test2");
 
   try {
     // Create a new service document
     const newService = {
-      title,
+      trade,
       description,
-      userId, // Assuming you want to associate the service with a user
+      contractorName,
+      contractorId, // Assuming you want to associate the service with a user
       createdAt: new Date().toISOString() // Optional: add a timestamp
     };
     console.log(newService);
@@ -242,6 +240,54 @@ app.patch('/acceptBookingRequest', async (req, res) => {
   }
 });
 
+
+
+app.delete('/deleteTrade', async (req, res) => {
+  const { tradeId } = req.query;
+  if (!tradeId) {
+    return res.status(400).send('Booking ID is required');
+  }
+
+  try {
+    console.log();
+    // Fetch the latest document to get the current _rev ID
+    const doc = await cloudant.getDocument({ db: dbTrades, docId: tradeId });
+    const currentRev = doc.result._rev;
+    // Now delete the document with the correct _rev ID
+    const deleteResponse = await cloudant.deleteDocument({ db: dbTrades, docId: tradeId, rev: currentRev });
+    res.status(200).json({ message: 'Booking declined', id: deleteResponse.result.id });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+
+app.get('/getContractorTrades', async (req, res) => {
+  const { userId } = req.query; // Assuming the username is passed as a query parameter
+
+  if (!userId) {
+    return res.status(400).send('error');
+  }
+
+  try {
+    // Query to find user by username
+    const findUserQuery = {
+      selector: { contractorId: userId },
+      limit: 1
+    };
+
+    const userResponse = await cloudant.postFind({ db: dbTrades, selector: findUserQuery.selector });
+    if (userResponse.result.docs.length === 0) {
+      return res.status(404).send('User not found');
+    }
+    const contractorTrades = userResponse.result.docs;
+    // Return user data, excluding sensitive information like password
+    res.json(contractorTrades);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

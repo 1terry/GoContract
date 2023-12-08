@@ -6,6 +6,8 @@ function SignUp() {
   const [email, setEmail] = useState('');
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
+  const [address, setAddress] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
   const [password, setPassword] = useState('');
   const [userType, setUserType] = useState('');
   const [message, setMessage] = useState(''); // To display messages to the user
@@ -29,7 +31,7 @@ function SignUp() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ firstName: firstName, lastName: lastName, username: email, password: password, userType: userType}),
+        body: JSON.stringify({ firstName: firstName, lastName: lastName, address:address, phoneNumber:phoneNumber, username: email, password: password, userType: userType}),
       });
 
       const data = await response.json();
@@ -63,6 +65,20 @@ function SignUp() {
         <input 
           value={lastName} 
           onChange={(e) => setLastName(e.target.value)} 
+        />
+      </label>
+      <label>
+        Address:
+        <input 
+          value={address} 
+          onChange={(e) => setAddress(e.target.value)} 
+        />
+      </label>
+      <label>
+        Phone Number:
+        <input 
+          value={phoneNumber} 
+          onChange={(e) => setPhoneNumber(e.target.value)} 
         />
       </label>
       <br></br>
