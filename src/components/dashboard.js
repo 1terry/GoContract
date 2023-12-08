@@ -10,7 +10,7 @@ function Dashboard() {
   const navigate = useNavigate();
 
   const [jsonData, setJsonData] = useState(''); // Added state to store JSON data
-
+  const [passedData, setCardData] = useState('');
 
   const handleSearchClick = async (event) => {
     event.preventDefault();
@@ -38,11 +38,36 @@ function Dashboard() {
       // Check if 'users' is an array in the response
       if (Array.isArray(data.users)) {
         // Extract usernames from the array
-        const usernames = data.users.map(user => user.username);
-  
+        const usernames = data.users.map(user => user.firstName + ' ' + user.lastName);
+        const firstNames = data.users.map(user => user.firstName);
+        const lastNames = data.users.map(user => user.lastName);
+        const contractorId = data.users.map(user => user._id);
+
+
         // Update jsonData with the array of usernames
         setJsonData(JSON.stringify(usernames, null, 2));
   
+        console.log('Number of users: ', usernames.length);
+        // for (var i = 0; i < usernames.length; i++){
+        //   console.log("showing card: ", firstNames[i], lastNames[i]);
+        //   <ContractorCard
+        //     firstName={firstNames[i]}
+        //     lastName={lastNames[i]}
+        //   />
+        // }
+        const contractorCards = usernames.map((user, index) => (
+          <ContractorCard
+          key={index}
+          firstName = {firstNames[index]}
+          lastName = {lastNames[index]}
+          />
+        ));
+
+        console.log("Contractor Cards", contractorCards);
+
+        setCardData(contractorCards);
+        console.log("Contractor Cards data", contractorCards);
+
         if (response.status === 201) {
           console.log('Query Successful', data);
           setMessage('Query Successful!');
@@ -77,11 +102,12 @@ function Dashboard() {
       <button type="submit">Search</button>
 
       <div>
-        <p>JSON Data:</p>
-        <pre>{jsonData}</pre>
+        {/* <p>JSON Data:</p> */}
+        {/* <pre>{jsonData}</pre> */}
+        <pre>{passedData}</pre>
         {/* <ContractorCard /> */}
       </div>
-      {/* {showContractorCard && <ContractorCard />} */}
+      {showContractorCard}
     </form>
   );
 }

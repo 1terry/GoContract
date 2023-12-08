@@ -172,7 +172,10 @@ const performSearch = (data, contractorName) => {
   }
 
   return data.filter((value) =>
-    value.username.toLowerCase().includes(searchWord.toLowerCase())
+    (value.firstName.toLowerCase().includes(searchWord.toLowerCase()) ||
+    value.lastName.toLowerCase().includes(searchWord.toLowerCase())) &&
+    value.userType.includes('contractor')
+    
   );
 };
 
@@ -184,7 +187,8 @@ app.post('/search', async (req, res) => {
 
     // Fetch all users dynamically from Cloudant
     const findAllUsersQuery = {};
-    const usersResponse = await cloudant.postFind({ db: dbName, selector: findAllUsersQuery });
+    
+    const usersResponse = await cloudant.postFind({ db: dbUsers, selector: findAllUsersQuery });
 
     // Extract data from the Cloudant response (modify this based on your Cloudant structure)
     const data = usersResponse.result.docs;
