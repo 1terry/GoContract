@@ -1,5 +1,11 @@
 /* src/dashboard.css */
 
+.BackButton{
+  position: absolute;
+  left: 20px;
+  top: 30px;
+}
+
 /* Center the search bar and heading both horizontally and vertically */
 .container-search {
     display: flex;

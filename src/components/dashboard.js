@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./dashboard.css";
 import ContractorCard from "./contractorCard";
+import "./login.css"
 
 function Dashboard() {
   const [showContractorCard, setShowContractorCard] = useState(false);
@@ -100,6 +101,8 @@ function Dashboard() {
   };
 
   return (
+    <div className="background">
+      
     <form onSubmit={handleSearchClick} className='container-search'>
       <div className='searchHeader'>
         <h2>Search</h2>
@@ -115,9 +118,9 @@ function Dashboard() {
         <label><input type="radio" name="options" value="byName" checked={selectedOption === "byName"} onChange={handleRadioChange}/>Search by Name</label>
         <label><input type="radio" name="options" value="byType" checked={selectedOption === "byType"} onChange={handleRadioChange}/>Search by Trade Type</label>
 
-        <button type="submit" class="btn btn-success">Search</button>
+        <button type="submit" class="btn btn-primary btn-success">Search</button>
+      <button className='BackButton btn-primary btn' onClick={handleLogout}>Logout</button>
       </div>
-      <button onClick={handleLogout}>Logout</button>
 
       <div className='searchBar'>
         {/* <p>JSON Data:</p> */}
@@ -127,6 +130,9 @@ function Dashboard() {
       </div>
       {showContractorCard}
     </form>
+
+    </div>
+
   );
 }
 

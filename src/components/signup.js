@@ -59,8 +59,24 @@ function SignUp() {
 
   return (
 
+<div className="background">
+<div class="area" >
+                <ul class="circles">
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                </ul>
+        </div >
 
     <div className="loginBox">
+
     <img className="user" src="https://i.ibb.co/yVGxFPR/2.png" height="100px" width="100px" alt="User" />
     <h3>Sign up here</h3>
     <form onSubmit={handleSubmit}>
@@ -109,8 +125,9 @@ function SignUp() {
     <div className="text-center">
       {/* <p style={{ color: '#59238F' }}>Sign-Up</p> */}
     </div>
-  </div>
 
+  </div>
+</div>
     // <form onSubmit={handleSubmit}>
     //   <h2>Sign Up</h2>
     //   {message && <div>{message}</div>} {/* Display messages to the user */}
