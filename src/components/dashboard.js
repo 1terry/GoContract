@@ -60,6 +60,7 @@ function Dashboard() {
           key={index}
           firstName = {firstNames[index]}
           lastName = {lastNames[index]}
+          contractorId = {contractorId[index]}
           />
         ));
 

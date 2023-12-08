@@ -2,12 +2,14 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom'; // Import the useNavigate hook
 import './contractorCard.css';
 
-function ContractorCard({ firstName, lastName }) {
+function ContractorCard({ firstName, lastName, contractorId }) {
   const navigate = useNavigate(); // Initialize the useNavigate hook
 
   const handleButtonClick = () => {
     // Handle button click and navigate to '/dashboard'
-    navigate('/bookings');
+    var fullName = firstName + " " + lastName;
+    console.log(fullName, contractorId);
+    navigate('/bookings', { state: {fullName, contractorId } });
   };
 
   return (

@@ -1,9 +1,13 @@
 import React, { useState } from "react";
-
 import { useAuth } from "../context/AuthContext";
+import { useLocation } from 'react-router-dom';
 
-function BookingForm({ contractorName, contractorId }) {
+function BookingForm() {
+  const { state } = useLocation();
   const { userData } = useAuth();
+
+  // Destructure values from state or provide default values
+  const { contractorName = '', contractorId = '' } = state || {};
 
   const [date, setDate] = useState("");
   const [typeOfService, setTypeOfService] = useState("");
@@ -12,27 +16,34 @@ function BookingForm({ contractorName, contractorId }) {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
+      console.log(state);
       console.log(contractorId);
       console.log(userData.userId);
-      console.log(date);
+      console.log('date');
       console.log(typeOfService);
       console.log(serviceDetails);
-      const response = await fetch("/addBooking", {
+      console.log(contractorName);
+      var clientName =userData.firstName + " " + userData.lastName;
+      console.log(clientName);
+
+      const response = await fetch('http://localhost:3001/addBooking', {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
           contractorId: contractorId,
-          contractorName: contractorName,
+          // contractorName: contractorName,
+          contractorName: 'big benis',
           clientName: userData.firstName + " " + userData.lastName,
           clientId: userData.userId,
-          date: date,
+          date: 'date with nazim uwu',
           typeOfService: typeOfService,
           serviceDetails: serviceDetails,
           status: false,
         }),
       });
+      
       console.log(response);
 
       if (!response.ok) {
@@ -48,6 +59,7 @@ function BookingForm({ contractorName, contractorId }) {
     setTypeOfService("");
     setServiceDetails("");
   };
+
   return (
     <div>
       <form onSubmit={handleSubmit}>

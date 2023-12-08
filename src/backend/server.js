@@ -25,7 +25,7 @@ const cloudant = CloudantV1.newInstance({
 
 const dbUsers = 'users';
 const dbServices = 'services';
-
+const dbBookings = 'bookings';
 const { v4: uuidv4 } = require('uuid'); // Import UUID
 
 // Signup Endpoint
@@ -213,7 +213,65 @@ app.post('/search', async (req, res) => {
   }
 });
 
+// POST Endpoint to add a booking
+app.post('/addBooking', async (req, res) => {
+  console.log('Request payload:', req.body);
 
+  const {
+    contractorId,
+    contractorName,
+    clientName,
+    clientId,
+    date,
+    typeOfService,
+    serviceDetails,
+    status
+  } = req.body;
+
+  // Validate input
+  if (
+    !contractorId ||
+    !contractorName ||
+    !clientName ||
+    !clientId ||
+    !date ||
+    !typeOfService ||
+    !serviceDetails ||
+    status == null
+  ) {
+    console.log( contractorId,
+      contractorName,
+      clientName,
+      clientId,
+      date,
+      typeOfService,
+      serviceDetails,
+      status);
+    return res.status(400).send('Invalid request parameters');
+  }
+
+  try {
+    // Create a new booking document
+    const newBooking = {
+      contractorId,
+      contractorName,
+      clientName,
+      clientId,
+      date,
+      typeOfService,
+      serviceDetails,
+      status,
+      createdAt: new Date().toISOString() // Optional: add a timestamp
+    };
+    // Insert the document into Cloudant or your preferred database
+    const response = await cloudant.postDocument({ db: dbBookings, document: newBooking });
+
+    res.status(201).json({ message: 'Booking added', id: response.result.id });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
