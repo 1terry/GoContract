@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { useLocation } from "react-router-dom";
 
-function Invoice({ data }) {
+function Invoice() {
   const navigate = useNavigate();
   const { userData } = useAuth();
+  const location = useLocation();
+  const { bookingId } = useParams();
 
   const [inputFields, setInputFields] = useState([{ name: "", value: "" }]);
   const [contractorIdentifier, setIdentifier] = useState("");
@@ -42,7 +45,8 @@ function Invoice({ data }) {
           clientAddress: sampleClientAddress,
           clientPhone: sampleClientNumber,
           clientEmail: sampleClientEmail,
-          listOfServices: inputFields
+          listOfServices: inputFields,
+          bookingId: bookingId
         })
       });
       const data = await response.json();
@@ -84,6 +88,9 @@ function Invoice({ data }) {
           value={contractorIdentifier}
           onChange={(e) => setIdentifier(e.target.value)}
         ></input>
+
+        <p> Booking id = {bookingId}</p>
+
         <p>
           Invoice Date:
           {today}

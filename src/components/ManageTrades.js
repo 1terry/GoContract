@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { useAuth } from '../context/AuthContext';
-import { useNavigate } from 'react-router-dom';
-import AddServiceForm from './AddServiceForm'; // Import the new component
+import React, { useState, useEffect } from "react";
+import { useAuth } from "../context/AuthContext";
+import { useNavigate } from "react-router-dom";
+import AddServiceForm from "./AddServiceForm"; // Import the new component
 
 function ManageTrades() {
   const { userData } = useAuth();
@@ -12,19 +12,21 @@ function ManageTrades() {
   // Define the fetchTrades function
   const fetchTrades = async () => {
     try {
-      const response = await fetch(`/getContractorTrades?userId=${userData.userId}`);
+      const response = await fetch(
+        `/getContractorTrades?userId=${userData.userId}`
+      );
       if (!response.ok) {
-        throw new Error('Network response was not ok');
+        throw new Error("Network response was not ok");
       }
       const tradesData = await response.json();
 
       if (Array.isArray(tradesData)) {
         setTrades(tradesData);
       } else {
-        console.error('Expected an array of trades, but received:', tradesData);
+        console.error("Expected an array of trades, but received:", tradesData);
       }
     } catch (error) {
-      console.error('Error fetching trades:', error);
+      console.error("Error fetching trades:", error);
     }
   };
 
@@ -41,25 +43,34 @@ function ManageTrades() {
 
   const handleDelete = async (tradeId) => {
     try {
-      const response = await fetch(`/deleteTrade?tradeId=${tradeId}`, { method: 'DELETE' });
+      const response = await fetch(`/deleteTrade?tradeId=${tradeId}`, {
+        method: "DELETE"
+      });
       if (!response.ok) {
-        throw new Error('Failed to delete trade');
+        throw new Error("Failed to delete trade");
       }
 
       // Update the state to remove the deleted trade
-      setTrades(prevState => prevState.filter(trade => trade._id !== tradeId));
+      setTrades((prevState) =>
+        prevState.filter((trade) => trade._id !== tradeId)
+      );
     } catch (error) {
-      console.error('Error deleting trade:', error);
+      console.error("Error deleting trade:", error);
     }
   };
 
   return (
     <div>
-      <button onClick={() => navigate('/contractorDashboard')}>Back to Dashboard</button>
+      <button onClick={() => navigate("/contractorDashboard")}>
+        Back to Dashboard
+      </button>
       <h2>Manage Trades</h2>
       <button onClick={() => setShowForm(true)}>Add a Trade</button>
       {showForm && (
-        <AddServiceForm onClose={() => setShowForm(false)} onServiceAdded={refreshTrades} />
+        <AddServiceForm
+          onClose={() => setShowForm(false)}
+          onServiceAdded={refreshTrades}
+        />
       )}
       <div>
         {trades.map((trade, index) => (

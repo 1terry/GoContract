@@ -1,30 +1,23 @@
 import React, { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
-import { useLocation } from "react-router-dom";
-import { useNavigate, useParams } from "react-router-dom";
 
 // loading the invoice (only for users)
 function LoadInvoice({ data }) {
+  const [invoice, setinvoice] = useState("");
   const [message, setMessage] = useState("");
   const [enteredInvoiceId, setInvoiceId] = useState("");
   const { userData } = useAuth();
   var item;
-  const { bookingId } = useParams();
-  const [invoice, setinvoice] = useState("");
-  const location = useLocation();
-  const passedVariable = location.state?.invoiceId;
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    grabData();
-  }, []);
 
   const grabData = async () => {
     setMessage("");
+    setinvoice("");
     // loading the data
     try {
       // try hitting the endpoint and loading the data
-      const response = await fetch(`/getInvoice?identifier=${passedVariable}`);
+      const response = await fetch(
+        `/getInvoice?identifier=${enteredInvoiceId}`
+      );
       if (!response.ok) {
         throw new Error("Network error");
       }
@@ -52,16 +45,29 @@ function LoadInvoice({ data }) {
 
   return (
     <div>
-      {!message && <h1>INVOICE</h1>}
+      <label>
+        Enter an invoice id:
+        <input
+          placeholder="Enter invoice id"
+          value={enteredInvoiceId}
+          onChange={(e) => setInvoiceId(e.target.value)}
+        ></input>
+      </label>
 
-      {!message && (
+      <button onClick={grabData}>Search for invoice</button>
+
+      {!invoice && <h2>No invoice found</h2>}
+
+      {!message && invoice && <h1>INVOICE</h1>}
+
+      {!message && invoice && (
         <div>
           <p>Invoice #: {invoice.invoiceId}</p>
           <p>Invoice Date: {invoice.invoiceDate}</p>
           <p>Due Date: {invoice.dueDate}</p>
         </div>
       )}
-      {!message && (
+      {!message && invoice && (
         <div>
           <h2>FROM</h2>
           <p>Name: {invoice.contractorName}</p>
@@ -71,7 +77,7 @@ function LoadInvoice({ data }) {
         </div>
       )}
 
-      {!message && (
+      {!message && invoice && (
         <div>
           <h2>TO</h2>
           <p>Name: {invoice.clientName}</p>
@@ -91,7 +97,6 @@ function LoadInvoice({ data }) {
         </div>
       )}
       {message && <div>{message}</div>}
-      <button onClick={() => navigate("/contractorDashboard")}>Back</button>
     </div>
   );
 }

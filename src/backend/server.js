@@ -153,7 +153,8 @@ app.post("/invoice", async (req, res) => {
     clientAddress,
     clientPhone,
     clientEmail,
-    listOfServices
+    listOfServices,
+    bookingId
   } = req.body;
   console.log("Request body:", req.body);
 
@@ -170,7 +171,8 @@ app.post("/invoice", async (req, res) => {
     !clientAddress ||
     !clientPhone ||
     !clientEmail ||
-    !listOfServices
+    !listOfServices ||
+    !bookingId
   ) {
     return res.status(400).send("Invoice data is missing");
   }
@@ -205,7 +207,8 @@ app.post("/invoice", async (req, res) => {
       clientAddress,
       clientPhone,
       clientEmail,
-      listOfServices
+      listOfServices,
+      bookingId
     };
     const response = await cloudant.postDocument({
       db: invoiceDb,
@@ -217,6 +220,44 @@ app.post("/invoice", async (req, res) => {
       .json({ message: "Invoice created", id: response.result.id });
   } catch (error) {
     console.error(error); // Log the error for debugging
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+app.get("/getInvoiceByBookingId", async (req, res) => {
+  const { identifier } = req.query;
+
+  console.log(identifier);
+
+  if (!identifier) {
+    return res.status(400).send("Missing booking id");
+  }
+
+  try {
+    const findInvoice = {
+      selector: { bookingId: identifier }
+    };
+
+    console.log(findInvoice.selector);
+
+    const existingInvoice = await cloudant.postFind({
+      db: invoiceDb,
+      selector: findInvoice.selector
+    });
+
+    console.log("test");
+    console.log(existingInvoice);
+
+    // exists
+    if (existingInvoice.result.docs.length === 0) {
+      return res.status(404).send("Invoice not found");
+    }
+
+    const invoice = existingInvoice.result.docs[0];
+    console.log(invoice);
+    res.json(invoice);
+  } catch (error) {
+    console.error(error);
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
