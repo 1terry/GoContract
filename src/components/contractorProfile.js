@@ -1,5 +1,5 @@
 // src/components/ContractoruserData.js
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 
@@ -8,6 +8,37 @@ function ContractorProfile() {
   const [canManageTrades, setCanManageTrades] = useState(userData.canManageTrades);
   const [canManageBookings, setCanManageBookings] = useState(userData.canManageBookings);
   const navigate = useNavigate();
+  const [averageRating, setAverageRating] = useState('Loading...');
+
+
+  useEffect(() => {
+    // ... existing useEffect code
+
+    // Fetch contractor rating
+    const fetchContractorRating = async () => {
+      try {
+        const response = await fetch(`/getContractorRating?contractorId=${userData.userId}`);
+        if (!response.ok) {
+          throw new Error('Failed to fetch rating');
+        }
+        const data = await response.json();
+        setAverageRating(data.averageRating);
+      } catch (error) {
+        console.error('Error fetching rating:', error);
+        setAverageRating('Error loading rating');
+      }
+    };
+
+    if (userData && userData.userId) {
+      fetchContractorRating();
+    }
+  }, [userData]);
+
+
+
+
+
+
 
   const handleCheckboxChange = async (event) => {
     const { name, checked } = event.target;
@@ -82,6 +113,7 @@ const handleDeleteAccount = async () => {
       <button onClick={() => navigate('/contractorDashboard')}>Back</button>
 
       <h2>My Profile</h2>
+      <h3>My Rating: {averageRating}</h3>
       <p><strong>First Name:</strong> {userData.firstName}</p>
       <p><strong>Last Name:</strong> {userData.lastName}</p>
       <p><strong>Address:</strong> {userData.address}</p>
