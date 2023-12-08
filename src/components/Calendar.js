@@ -117,33 +117,38 @@ const CalendarComponent = () => {
   };
 
   const tileContent = ({ date, view }) => {
-    if (view === 'month') {
-      const dateKey = date.toISOString().split('T')[0];
-      const dateEvents = events.filter((event) => event.date === dateKey);
-      const combinedArray = [...dateEvents, ...bookings.filter((book) => book.date.split('T')[0] === dateKey && book.status)];
-      if (combinedArray.length > 0) {
-        const firstEvent = combinedArray[0]; // Display only the first event
-        if (dateEvents < 1){
-          return (
-            <div className="event-marker">
-              <div className="event">{firstEvent.typeOfService}</div>
-            </div>
-          );
-        } else {
-          return (
-            <div className="event-marker">
-              <div className="event">{firstEvent.title}</div>
-            </div>
-          );
+    try{
+      if (view === 'month') {
+        const dateKey = date.toISOString().split('T')[0];
+        const dateEvents = events.filter((event) => event.date === dateKey);
+        const combinedArray = [...dateEvents, ...bookings.filter((book) => book.date.split('T')[0] === dateKey && book.status)];
+        if (combinedArray.length > 0) {
+          const firstEvent = combinedArray[0]; // Display only the first event
+          if (dateEvents < 1){
+            return (
+              <div className="event-marker">
+                <div className="event">{firstEvent.typeOfService}</div>
+              </div>
+            );
+          } else {
+            return (
+              <div className="event-marker">
+                <div className="event">{firstEvent.title}</div>
+              </div>
+            );
+          }
         }
       }
+      return null;
+    } catch (error){
+      console.error('Error filtering events by date:', error);
+      return null;
     }
-    return null;
   };
-  
-  // ...
-  
-  // Helper function to filter events by date
+
+// ...
+
+// Helper function to filter events by date
   const filterEventsByDate = (events, dateKey) => {
     try {
       return events.filter((event) => new Date(event.date).toISOString().split('T')[0] === dateKey);
@@ -152,7 +157,7 @@ const CalendarComponent = () => {
       return [];
     }
   };
-  
+
   // Helper function to filter bookings by date and status
   const filterBookingsByDate = (bookings, dateKey) => {
     try {
@@ -162,9 +167,11 @@ const CalendarComponent = () => {
       return [];
     }
   };
+
   const selectedDateKey = new Date(selectedDate).toISOString().split('T')[0];
   const selectedDateEvents = filterEventsByDate(events, selectedDateKey);
   const selectedDateBookings = filterBookingsByDate(bookings, selectedDateKey);
+
   
   return (
     <div>
@@ -177,7 +184,7 @@ const CalendarComponent = () => {
           <>
           <h2>Calendar</h2>
           <Calendar onChange={handleDateChange} value={selectedDate} tileContent={tileContent} />
-            <h3>Add Event</h3>
+            <h4>Add Event</h4>
             <label>Date:</label>
             <input
               type="date"
@@ -195,7 +202,7 @@ const CalendarComponent = () => {
             />
             <br />
             <button onClick={handleAddEvent}>Add Event</button>
-            <h3>Events and Bookings on {selectedDate.toDateString()}</h3>
+            <h4>Events and Bookings on {selectedDate.toDateString()}</h4>
             {(selectedDateEvents.length > 0 || selectedDateBookings.length > 0) && (
               <ul>
                 {selectedDateEvents.map((event, index) => (

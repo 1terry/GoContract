@@ -1,7 +1,31 @@
-.container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh; 
+.containerBook {
+    /* display: flex; */
+    /* justify-content: center; */
+    /* align-items: center; */
+    /* height: 100vh;  */
+    /* background-color: rgb(111, 131, 111); */
+    /* flex-direction: column; */
+    /* width: 100vw; */
   }
   
+.formatBooking{
+    text-align: right;
+}
+
+.floatLeft{
+    float: left;
+    height:100vh;
+    background-color: rgb(32, 93, 146);
+    width: 30vw;
+    margin-right: 30px;
+    position: absolute;
+    /* left: 50px; */
+    /* top: 100px; */
+    text-align: left;
+    
+}
+
+.floatRight{
+    float: right;
+    width: 60vw;
+}
