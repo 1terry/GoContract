@@ -19,6 +19,7 @@
     "ibm-cloud-sdk-core": "^4.2.0",
     "jsonwebtoken": "^9.0.2",
     "lodash.isplainobject": "^4.0.6",
+    "nodemailer": "^6.9.7",
     "react": "^18.2.0",
     "react-calendar": "^4.6.1",
     "react-dom": "^18.2.0",

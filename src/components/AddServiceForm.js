@@ -43,26 +43,26 @@ function AddServiceForm({ onClose, onServiceAdded }) {
       const response = await fetch(`${services[0].serviceURL}/addService`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json"
         },
         body: JSON.stringify({
           trade: serviceTitle,
           description: serviceDescription,
           contractorId: userData.userId, // Assuming userData contains userId
-          contractorName: userData.firstName.concat(' ',userData.lastName)
-        }),
+          contractorName: userData.firstName.concat(" ", userData.lastName)
+        })
       });
-  
+
       if (!response.ok) {
-        throw new Error('Network response was not ok');
+        throw new Error("Network response was not ok");
       }
-  
+
       const result = await response.json();
-      console.log('Service added:', result);
-      onServiceAdded(); 
+      console.log("Service added:", result);
+      onServiceAdded();
       onClose(); // Close form on successful submission
     } catch (error) {
-      console.error('Error submitting service:', error);
+      console.error("Error submitting service:", error);
     }
 
     setServiceDescription("");
