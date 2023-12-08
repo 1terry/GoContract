@@ -1,26 +1,14 @@
 import React, { useState } from "react";
-<<<<<<< Updated upstream
-import { useLocation } from 'react-router-dom';
-import { useNavigate } from "react-router-dom";
-
-=======
 import { useLocation, useNavigate } from "react-router-dom";
->>>>>>> Stashed changes
 
 import { useAuth } from "../context/AuthContext";
 
 function RatingForm() {
-<<<<<<< Updated upstream
   const { state } = useLocation();
   const navigate = useNavigate();
-=======
-  const navigate = useNavigate();
-  const { state } = useLocation();
-
->>>>>>> Stashed changes
   const { userData } = useAuth();
 
-  const [ratingValue, setRatingValue] = useState(1);
+  const [ratingValue, setRatingValue] = useState("1");
   const [ratingText, setRatingText] = useState("");
   const { contractorName = "", contractorId = "" } = state || {};
 
@@ -70,7 +58,7 @@ function RatingForm() {
         <h1>Rate {contractorName}</h1>
         <br></br>
         <label htmlFor="ratingDropdown">Select a Rating:</label>
-        <select id="ratingDropdown" value={ratingValue}  onChange={handleChange}>
+        <select id="ratingDropdown" value={ratingValue} onChange={handleChange}>
           {[1, 2, 3, 4, 5].map((number) => (
             <option key={number} value={number}>
               {number}
