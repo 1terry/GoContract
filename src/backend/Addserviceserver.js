@@ -30,24 +30,21 @@ const { v4: uuidv4 } = require('uuid'); // Import UUID
 
 // POST Endpoint to add a service
 app.post('/addService', async (req, res) => {
-  const { title, description, userId } = req.body;
-  // Validate input
-  console.log("test1");
-  console.log(title);
-  console.log(description);
-  console.log(userId);
+  const { trade, description, contractorId, contractorName } = req.body;
 
-  if (!title || !description || !userId) {
-    return res.status(400).send('Title, description, and user ID are required');
+
+  if (!trade || !description || !contractorId) {
+    return res.status(400).send('trade, description, and user ID are required');
   }
   console.log("test2");
 
   try {
     // Create a new service document
     const newService = {
-      title,
+      trade,
       description,
-      userId, // Assuming you want to associate the service with a user
+      contractorName,
+      contractorId, // Assuming you want to associate the service with a user
       createdAt: new Date().toISOString() // Optional: add a timestamp
     };
     console.log(newService);

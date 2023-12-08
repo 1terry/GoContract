@@ -85,7 +85,7 @@ function ManageTrades() {
           <div key={index}>
             <h3>{trade.trade}</h3>
             <p>Details: {trade.description}</p>
-            <p>Listed On: {trade.createdAt}</p>
+            <p>Listed On: {trade.createdAt.split('T')[0]}</p>
             <button onClick={() => handleDelete(trade._id)}>Delete</button>
           </div>
         ))}

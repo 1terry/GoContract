@@ -52,7 +52,6 @@ app.post('/bookings/contractorsearch', async (req, res) => {
     const eventsData = await cloudant.postFind({ db: dbBookings, selector: findUserEvents.selector });
     const jsonResponse = JSON.parse(JSON.stringify(eventsData.result));
     const { docs } = eventsData.result;
-    console.log(docs)
     res.json(docs)
   } catch (error) {
     console.error('Error reading events:', error);
@@ -79,7 +78,6 @@ app.post('/bookings/clientsearch', async (req, res) => {
 
 app.post('/events', async (req, res) => {
   const {userId, date, title } = req.body;
-  console.log('Request body:', req.body); 
 
   if (!date || !title) {
     return res.status(400).send('Date and title are required.');

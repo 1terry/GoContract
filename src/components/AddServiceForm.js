@@ -79,7 +79,6 @@ function AddServiceForm({ onClose, onServiceAdded }) {
       ) : (
         <>
         <button onClick={() => navigate('/contractorDashboard')}>Back</button>
-        <h2>Add a Service</h2>
         <form onSubmit={handleSubmit}>
           <div>
             <label>

@@ -34,7 +34,7 @@ const ServiceRegistryClient = () => {
     try {
       const response = await fetch('http://localhost:3002/services');
       const data = await response.json();
-      setServices(data.services.filter());
+      setServices(data.services);
     } catch (error) {
       console.error('Error fetching services:', error);
     }
