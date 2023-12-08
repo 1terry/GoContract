@@ -19,6 +19,7 @@ const CalendarComponent = () => {
   const fetchEvents = async () => {
     try {
       newEvent.userId = userData.userId
+      newEvent.userId = "194084ad-7581-4e4e-9bc6-c5214d53eb4d"
       const response = await fetch(`http://localhost:3001/events/search`, {
         method: 'POST',
         headers: {
@@ -69,6 +70,7 @@ const CalendarComponent = () => {
   const handleAddEvent = async () => {
     try {
       newEvent.userId = userData.userId
+      newEvent.userId = "194084ad-7581-4e4e-9bc6-c5214d53eb4d"
       const response = await fetch(`http://localhost:3001/events`, {
         method: 'POST',
         headers: {
@@ -92,7 +94,7 @@ const CalendarComponent = () => {
     if (view === 'month') {
       const dateKey = date.toISOString().split('T')[0];
       const dateEvents = events.filter((event) => event.date === dateKey);
-      const combinedArray = [...dateEvents, ...bookings.filter((book) => book.date.split('T')[0] === dateKey)];
+      const combinedArray = [...dateEvents, ...bookings.filter((book) => book.date.split('T')[0] === dateKey && book.status)];
       if (combinedArray.length > 0) {
         const firstEvent = combinedArray[0]; // Display only the first event
         if (dateEvents < 1){
@@ -114,7 +116,7 @@ const CalendarComponent = () => {
   };
   const selectedDateKey = selectedDate.toISOString().split('T')[0];
   const selectedDateEvents = events.filter((event) => event.date === selectedDateKey);
-  const selectedDateBookings = bookings.filter((book) => book.date.split('T')[0] === selectedDateKey)
+  const selectedDateBookings = bookings.filter((book) => book.date.split('T')[0] === selectedDateKey && book.status)
 
   
   return (
