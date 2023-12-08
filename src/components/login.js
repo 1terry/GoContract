@@ -33,7 +33,7 @@ function Login() {
       console.log(data.userType);
       if (response.status === 200) {
         if (data.userType === "contractor") {
-          fetch(`/getUserInfo?username=${email}`, {
+          fetch(`http://localhost:3001/getUserInfo?username=${email}`, {
             headers: {
               Accept: "application/json"
             }
