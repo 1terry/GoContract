@@ -6,6 +6,9 @@ import SignUp from "./components/signup";
 import ContractorDashboard from "./components/contractorDashboard";
 import ConditionalNavigation from "./components/conditionalNavigation";
 import PrivateRoute from "./components/PrivateRoute";
+import Invoice from "./components/invoice";
+import Data from "./tempData.json";
+import GetInvoice from "./components/loadinvoice";
 
 function App() {
   return (
@@ -18,10 +21,23 @@ function App() {
           <Route path="/signup" element={<SignUp />} />
           <Route path="/login" element={<Login />} />
           <Route
+            path="/getInvoice"
+            element={<GetInvoice data={112}></GetInvoice>}
+          ></Route>
+          <Route
             path="/contractorDashboard"
             element={
               <PrivateRoute>
                 <ContractorDashboard />
+              </PrivateRoute>
+            }
+          />
+
+          <Route
+            path="/invoice"
+            element={
+              <PrivateRoute>
+                <Invoice data={Data} />
               </PrivateRoute>
             }
           />

@@ -27,6 +27,7 @@ const cloudant = CloudantV1.newInstance({
 
 const dbUsers = "users";
 const dbServices = "services";
+const invoiceDb = "invoice";
 
 const { v4: uuidv4 } = require("uuid"); // Import UUID
 
@@ -127,12 +128,10 @@ app.post("/invoice", async (req, res) => {
     dueDate,
     contractorName,
     contractorAddress,
-    contractorCity,
     contractorPhone,
     contractorEmail,
     clientName,
     clientAddress,
-    clientCity,
     clientPhone,
     clientEmail,
     listOfServices
@@ -146,12 +145,10 @@ app.post("/invoice", async (req, res) => {
     !dueDate ||
     !contractorName ||
     !contractorAddress ||
-    !contractorCity ||
     !contractorPhone ||
     !contractorEmail ||
     !clientName ||
     !clientAddress ||
-    !clientCity ||
     !clientPhone ||
     !clientEmail ||
     !listOfServices
@@ -183,12 +180,10 @@ app.post("/invoice", async (req, res) => {
       dueDate,
       contractorName,
       contractorAddress,
-      contractorCity,
       contractorPhone,
       contractorEmail,
       clientName,
       clientAddress,
-      clientCity,
       clientPhone,
       clientEmail,
       listOfServices
@@ -209,17 +204,17 @@ app.post("/invoice", async (req, res) => {
 
 // Load a document from the invoice database so the user can view the invoice
 app.get("/getInvoice", async (req, res) => {
-  const { invoiceId } = req.body;
-  console.log("Request Body", req.body);
+  const { identifier } = req.query;
+  console.log("Request Body", req.query);
 
   // checking that the id is not empty
-  if (!invoiceId) {
+  if (!identifier) {
     return res.status(400).send("Missing invoice id");
   }
 
   try {
     const findInvoice = {
-      selector: { invoiceId: invoiceId },
+      selector: { invoiceId: identifier },
       limit: 1
     };
 

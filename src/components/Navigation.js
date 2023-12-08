@@ -10,9 +10,11 @@ function Navigation() {
       <Link to="/signup">
         <button>Sign Up</button>
       </Link>
-      <Link to="/invoice">
-        {" "}
-        <button>See Invoice</button>
+      {/* <Link to="/invoice">
+        <button>Make Invoice</button>
+      </Link> */}
+      <Link to="/getInvoice">
+        <button>Load Invoice</button>
       </Link>
     </div>
   );

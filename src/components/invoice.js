@@ -1,21 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 function Invoice({ data }) {
-  // create a query to the database to get all of the information
-
-  const [extraData, setData] = React.useState([]);
+  const navigate = useNavigate();
+  const { userData } = useAuth();
 
   const [inputFields, setInputFields] = useState([{ name: "", value: "" }]);
-
   const [contractorIdentifier, setIdentifier] = useState("");
-
   const [message, setMessage] = useState("");
-
-  // this needs to be changed to what the current contractor is
-  const invoiceId = data.map((record) => {
-    return record.InvoiceId;
-  });
+  const [sampleClientName, setClientName] = useState("");
+  const [sampleClientAddress, setClientAddress] = useState("");
+  const [sampleClientNumber, setClientNumber] = useState("");
+  const [sampleClientEmail, setClientEmail] = useState("");
 
   const invoiceDate = data.map((record) => {
     return record.InvoiceDate;
@@ -25,44 +22,12 @@ function Invoice({ data }) {
     return record.DueDate;
   });
 
-  const contractorName = data.map((record) => {
-    return record.ContractorName;
-  });
-
   const contractorAddress = data.map((record) => {
     return record.ContractorAddress;
   });
 
-  const contractorCity = data.map((record) => {
-    return record.ContractorCity;
-  });
-
   const contractorPhone = data.map((record) => {
     return record.ContractorPhone;
-  });
-
-  const contractorEmail = data.map((record) => {
-    return record.ContractorEmail;
-  });
-
-  const clientName = data.map((record) => {
-    return record.ClientNames;
-  });
-
-  const clientAddress = data.map((record) => {
-    return record.ClientAddress;
-  });
-
-  const clientCity = data.map((record) => {
-    return record.ClientCity;
-  });
-
-  const clientPhone = data.map((record) => {
-    return record.ClientPhone;
-  });
-
-  const clientEmail = data.map((record) => {
-    return record.ClientEmail;
   });
 
   const saveInvoice = async (event) => {
@@ -78,28 +43,21 @@ function Invoice({ data }) {
           invoiceId: contractorIdentifier.toString(),
           invoiceDate: invoiceDate.toString(),
           dueDate: dueDate.toString(),
-          contractorName: contractorName.toString(),
+          contractorName: userData.firstName + " " + userData.lastName,
           contractorAddress: contractorAddress.toString(),
-          contractorCity: contractorCity.toString(),
           contractorPhone: contractorPhone.toString(),
-          contractorEmail: contractorEmail.toString(),
-          clientName: clientName.toString(),
-          clientAddress: clientAddress.toString(),
-          clientCity: clientCity.toString(),
-          clientPhone: clientPhone.toString(),
-          clientEmail: clientEmail.toString(),
+          contractorEmail: userData.username,
+          clientName: sampleClientName,
+          clientAddress: sampleClientAddress,
+          clientPhone: sampleClientNumber,
+          clientEmail: sampleClientEmail,
           listOfServices: inputFields
         })
       });
-
       const data = await response.json();
-      console.log(data);
-
       if (response.status === 201) {
-        console.log("Saved invoice!", data);
         setMessage("Invoice saved!");
       } else {
-        console.error("Invoice not saved.");
         setMessage("Invoice save error.");
       }
     } catch (error) {
@@ -126,7 +84,6 @@ function Invoice({ data }) {
 
   return (
     <div>
-      {message && <div>{message}</div>}
       <h1>INVOICE</h1>
       <div>
         <p>Invoice #:</p>
@@ -149,46 +106,50 @@ function Invoice({ data }) {
         <h2>FROM</h2>
         <p>
           Name:
-          {contractorName}
+          {userData.firstName + " " + userData.lastName}
         </p>
         <p>
           Address:
           {contractorAddress}
         </p>
         <p>
-          City, State ZIP:
-          {contractorCity}
-        </p>
-        <p>
           Phone Number:
           {contractorPhone}
         </p>
-        <p>Email Address: {contractorEmail}</p>
+        <p>Email Address: {userData.username}</p>
       </div>
       <div>
         <h2>TO</h2>
-        <p>
+        <label>
           Name:
-          {clientName}
-        </p>
-        <p>
+          <input
+            value={sampleClientName}
+            onChange={(e) => setClientName(e.target.value)}
+          ></input>
+        </label>
+        <label>
           Street Address:
-          {clientAddress}
-        </p>
-        <p>
-          City, State ZIP:
-          {clientCity}
-        </p>
-        <p>
+          <input
+            value={sampleClientAddress}
+            onChange={(e) => setClientAddress(e.target.value)}
+          ></input>
+        </label>
+        <label>
           Phone Number:
-          {clientPhone}
-        </p>
-        <p>
+          <input
+            value={sampleClientNumber}
+            onChange={(e) => setClientNumber(e.target.value)}
+            type="number"
+          ></input>
+        </label>
+        <label>
           Email Address:
-          {clientEmail}
-        </p>
+          <input
+            value={sampleClientEmail}
+            onChange={(e) => setClientEmail(e.target.value)}
+          ></input>
+        </label>
         <p>List of Services:</p>
-
         <form>
           {inputFields.map((input, index) => {
             return (
@@ -213,6 +174,8 @@ function Invoice({ data }) {
         <button onClick={addFields}>Add more services</button>
       </div>
       <button onClick={saveInvoice}>Save Invoice</button>
+      <button onClick={() => navigate("/contractorDashboard")}>Back</button>
+      {message && <div>{message}</div>}
     </div>
   );
 }
