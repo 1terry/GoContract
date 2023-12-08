@@ -6,6 +6,7 @@ import SignUp from './components/signup';
 import ContractorDashboard from './components/contractorDashboard';
 import ConditionalNavigation from './components/conditionalNavigation';
 import PrivateRoute from './components/PrivateRoute'; 
+import CalendarComponent from './components/Calendar';
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
         <Routes>
           <Route path="/signup" element={<SignUp />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/calendar" element={<CalendarComponent />} />
           <Route path="/contractorDashboard" element={<PrivateRoute><ContractorDashboard /></PrivateRoute>} />
         </Routes>
       </Router>
