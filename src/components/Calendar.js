@@ -18,7 +18,7 @@ const CalendarComponent = () => {
 
   const fetchEvents = async () => {
     try {
-      newEvent.userId = userData.userId
+      newEvent.userId = userData.userId;
       const response = await fetch(`http://localhost:3001/events/search`, {
         method: 'POST',
         headers: {
@@ -26,36 +26,49 @@ const CalendarComponent = () => {
         },
         body: JSON.stringify(newEvent),
       });
-      const data = await response.json();
-      setEvents(data);
-
-      if (userData.userType === "contractor") {
-        const bookingResponse = await fetch(`http://localhost:3001/bookings/contractorsearch`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(newEvent),
-        });
-        const Bookingdata = await bookingResponse.json();
-        setBooking(Bookingdata);
-        console.log(Bookingdata.date.split('T')[0]);
-      } else {
-        const bookingResponse = await fetch(`http://localhost:3001/bookings/clientsearch`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(newEvent),
-        });
-        const Bookingdata = await bookingResponse.json();
-        setBooking(Bookingdata);
+      let data = await response.json();
+  
+      // Ensure that data is an array
+      if (!Array.isArray(data)) {
+        data = [];
       }
+      setEvents(data);
+  
+      let bookingResponse, Bookingdata;
+      if (userData.userType === "contractor") {
+        bookingResponse = await fetch(`http://localhost:3001/bookings/contractorsearch`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(newEvent),
+        });
+      } else {
+        bookingResponse = await fetch(`http://localhost:3001/bookings/clientsearch`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(newEvent),
+        });
+      }
+      Bookingdata = await bookingResponse.json();
+  
+      // Ensure that Bookingdata is an array
+      if (!Array.isArray(Bookingdata)) {
+        Bookingdata = [];
+      }
+      setBooking(Bookingdata);
+  
     } catch (error) {
       console.error('Error fetching events:', error);
+      setEvents([]); // Ensure that events and bookings are set to an empty array on error
+      setBooking([]);
     }
   };
-
+  
+  // Other parts of your component remain the same
+  
   const handleDateChange = (date) => {
     setSelectedDate(date);
     // Additional actions based on the selected date
