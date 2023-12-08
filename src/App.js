@@ -28,7 +28,7 @@ function App() {
         <Routes>
           <Route path="/signup" element={<SignUp />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/calendar" element={<CalendarComponent />} />
+          <Route path="/calendar" element={<PrivateRoute><CalendarComponent /></PrivateRoute>} />
           <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
           <Route path="/bookings" element={<PrivateRoute><Bookings /></PrivateRoute>} />
           <Route path="/ratingForm" element={<PrivateRoute><RatingForm></RatingForm></PrivateRoute>} />

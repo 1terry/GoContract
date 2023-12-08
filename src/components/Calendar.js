@@ -116,33 +116,61 @@ const CalendarComponent = () => {
   };
 
   const tileContent = ({ date, view }) => {
-    if (view === 'month') {
-      const dateKey = date.toISOString().split('T')[0];
-      const dateEvents = events.filter((event) => event.date === dateKey);
-      const combinedArray = [...dateEvents, ...bookings.filter((book) => book.date.split('T')[0] === dateKey && book.status)];
-      if (combinedArray.length > 0) {
-        const firstEvent = combinedArray[0]; // Display only the first event
-        if (dateEvents < 1){
-          return (
-            <div className="event-marker">
-              <div className="event">{firstEvent.typeOfService}</div>
-            </div>
-          );
-        } else {
-          return (
-            <div className="event-marker">
-              <div className="event">{firstEvent.title}</div>
-            </div>
-          );
+    try{
+      if (view === 'month') {
+        const dateKey = date.toISOString().split('T')[0];
+        const dateEvents = events.filter((event) => event.date === dateKey);
+        const combinedArray = [...dateEvents, ...bookings.filter((book) => book.date.split('T')[0] === dateKey && book.status)];
+        if (combinedArray.length > 0) {
+          const firstEvent = combinedArray[0]; // Display only the first event
+          if (dateEvents < 1){
+            return (
+              <div className="event-marker">
+                <div className="event">{firstEvent.typeOfService}</div>
+              </div>
+            );
+          } else {
+            return (
+              <div className="event-marker">
+                <div className="event">{firstEvent.title}</div>
+              </div>
+            );
+          }
         }
       }
+      return null;
+    } catch (error){
+      console.error('Error filtering events by date:', error);
+      return null;
     }
-    return null;
   };
-  const selectedDateKey = selectedDate.toISOString().split('T')[0];
-  const selectedDateEvents = events.filter((event) => event.date === selectedDateKey);
-  const selectedDateBookings = bookings.filter((book) => book.date.split('T')[0] === selectedDateKey && book.status)
 
+// ...
+
+// Helper function to filter events by date
+  const filterEventsByDate = (events, dateKey) => {
+    try {
+      return events.filter((event) => new Date(event.date).toISOString().split('T')[0] === dateKey);
+    } catch (error) {
+      console.error('Error filtering events by date:', error);
+      return [];
+    }
+  };
+
+  // Helper function to filter bookings by date and status
+  const filterBookingsByDate = (bookings, dateKey) => {
+    try {
+      return bookings.filter((book) => new Date(book.date).toISOString().split('T')[0] === dateKey && book.status);
+    } catch (error) {
+      console.error('Error filtering bookings by date and status:', error);
+      return [];
+    }
+  };
+
+  const selectedDateKey = new Date(selectedDate).toISOString().split('T')[0];
+  const selectedDateEvents = filterEventsByDate(events, selectedDateKey);
+  const selectedDateBookings = filterBookingsByDate(bookings, selectedDateKey);
+// ...
   
   return (
     <div>
