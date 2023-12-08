@@ -7,6 +7,7 @@ function ManageBookings() {
   const { userData } = useAuth();
   const [bookings, setBookings] = useState({ requested: [], active: [] });
   const navigate = useNavigate();
+  const [searchTerm, setSearchTerm] = useState(''); // State for search term
 
   useEffect(() => {
     const fetchBookings = async () => {
@@ -33,6 +34,22 @@ function ManageBookings() {
       fetchBookings();
     }
   }, [userData]);
+
+  const handleSearchChange = (e) => {
+    setSearchTerm(e.target.value);
+  };
+
+  // Filter bookings by client name, handling cases where clientName might be undefined
+  // Filter bookings by client name, ensuring the name starts with the search term
+  const filteredBookings = {
+    requested: bookings.requested.filter(booking => 
+      booking.clientName?.toLowerCase().startsWith(searchTerm.toLowerCase())
+    ),
+    active: bookings.active.filter(booking => 
+      booking.clientName?.toLowerCase().startsWith(searchTerm.toLowerCase())
+    )
+  };
+
 
   const handleDecline = async (bookingId) => {
     try {
@@ -77,12 +94,21 @@ function ManageBookings() {
   return (
     <div>
       <button onClick={() => navigate('/contractorDashboard')}>Back</button>
+      <h3>Search Clients</h3>
+      <input
+        type="text"
+        placeholder="Search by Client Name"
+        value={searchTerm}
+        onChange={handleSearchChange}
+      />
+
       <h2>Requested Bookings</h2>
       <div>
-        {bookings.requested.map((booking, index) => (
+        {filteredBookings.requested.map((booking, index) => (
           <div key={index}>
             <h3>{booking.typeOfService}</h3>
             <p>Details: {booking.serviceDetails}</p>
+            <p>client name: {booking.clientName}</p>
             <p>Date: {new Date(booking.date).toLocaleDateString()}</p>
             <p>Client ID: {booking.clientId}</p>
             <button onClick={() => handleDecline(booking._id)}>Decline</button>
@@ -92,12 +118,14 @@ function ManageBookings() {
       </div>
       <h2>Active Bookings</h2>
       <div>
-        {bookings.active.map((booking, index) => (
+        {filteredBookings.active.map((booking, index) => (
           <div key={index}>
             <h3>{booking.typeOfService}</h3>
             <p>Details: {booking.serviceDetails}</p>
+            <p>client name: {booking.clientName}</p>
             <p>Date: {new Date(booking.date).toLocaleDateString()}</p>
             <p>Client ID: {booking.clientId}</p>
+            <button onClick={() => handleDecline(booking._id)}>Cancel Job</button>
           </div>
         ))}
       </div>
