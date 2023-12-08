@@ -24,7 +24,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route
             path="/getInvoice"
-            element={<GetInvoice data={112}></GetInvoice>}
+            element={<GetInvoice data={12}></GetInvoice>}
           ></Route>
           <Route
             path="/contractorDashboard"

@@ -342,6 +342,37 @@ app.get("/getContractorBookings", async (req, res) => {
   }
 });
 
+// Deleting invoice endpoint
+app.delete("/deleteInvoice", async (req, res) => {
+  const { invoiceId } = req.query;
+
+  if (!invoiceId) {
+    return res.status(400).send("Invoice ID is required!");
+  }
+
+  try {
+    const doc = await cloudant.getDocument({
+      db: invoiceDb,
+      docId: invoiceId
+    });
+    const currentBook = doc.result._rev;
+
+    const deleteResponse = await cloudant.deleteDocument({
+      db: invoiceDb,
+      docId: invoiceId,
+      rev: currentBook
+    });
+
+    res.status.json({
+      message: "Invoice deleted",
+      id: deleteResponse.result.id
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
 app.delete("/declineBooking", async (req, res) => {
   const { bookingId } = req.query;
 
