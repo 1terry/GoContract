@@ -1,4 +1,4 @@
-/* src/dashboard.css */
+src/dashboard.css
 
 /* Center the search bar and heading both horizontally and vertically */
 .container-search {
@@ -18,9 +18,9 @@ h1{
   /* Style the input */
   .format {
     padding: 8px;
-    width: 25vw; /* Adjust the width as needed */
+    /* width: 25vw; Adjust the width as needed */
     min-width: 300px;
-    border: 1px solid #ccc;
+    /* border: 1px solid #ccc; */
     border-radius: 4px;
     box-sizing: border-box;
   }

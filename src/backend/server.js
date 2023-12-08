@@ -165,7 +165,6 @@ app.post('/addService', async (req, res) => {
 
 // Modify performSearch to handle an array of users
 const performSearch = (data, contractorName) => {
-  console.log("TEST", data);
   const searchWord = contractorName;
   if (!searchWord) {
     return data; // Return all users if no search term provided
@@ -184,6 +183,17 @@ const performTradeNameSearch = (data, contractorName) => {
 
   return data.filter((value) =>
     value.trade.toLowerCase().includes(searchWord.toLowerCase() 
+  ));
+};
+
+const performRatingSearch = (data, contractorId) => {
+  const searchWord = contractorId;
+  if (!searchWord) {
+    return data; // Return all users if no search term provided
+  }
+
+  return data.filter((value) =>
+    value.contractorId.toLowerCase().includes(searchWord.toLowerCase() 
   ));
 };
 
@@ -263,6 +273,7 @@ app.post('/addBooking', async (req, res) => {
     contractorName,
     clientName,
     clientId,
+    clientEmail,
     date,
     typeOfService,
     serviceDetails,
@@ -275,6 +286,7 @@ app.post('/addBooking', async (req, res) => {
     !contractorName ||
     !clientName ||
     !clientId ||
+    !clientEmail ||
     !date ||
     !typeOfService ||
     !serviceDetails ||
@@ -284,6 +296,7 @@ app.post('/addBooking', async (req, res) => {
       contractorName,
       clientName,
       clientId,
+      clientEmail,
       date,
       typeOfService,
       serviceDetails,
@@ -298,6 +311,7 @@ app.post('/addBooking', async (req, res) => {
       contractorName,
       clientName,
       clientId,
+      clientEmail,
       date,
       typeOfService,
       serviceDetails,
@@ -313,6 +327,16 @@ app.post('/addBooking', async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
+
+app.post('/rating', async (req, res) => {
+  const {
+    contractorId
+  } = req.body
+
+  if (contractorId) {
+
+  }
+})
 
 // POST Endpoint to add a booking
 app.post('/addRating', async (req, res) => {

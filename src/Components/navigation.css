@@ -1,0 +1,26 @@
+body {
+    margin: 0;
+    padding: 0;
+  }
+  
+  .format {
+    display: flex;
+    justify-content: center;
+    position: absolute;
+    align-items: center;
+    width: 100vw;
+    height: 80px;
+    margin-top: 480px;
+    z-index: 300;
+    border: 0;
+    border-radius: 0;
+    background-color: transparent;
+    /* min-height: 100vh; 
+    width: 100vw; */
+  }
+  
+  .btn {
+    /* Add any additional styling for your buttons */
+    margin: 10px;
+  }
+  

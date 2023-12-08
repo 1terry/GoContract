@@ -4,6 +4,7 @@ import { useLocation } from 'react-router-dom';
 import Calendar from "react-calendar";
 import CalendarComponent from "./Calendar";
 import 'react-calendar/dist/Calendar.css';
+import './booking.css';
 
 function BookingForm() {
   const { state } = useLocation();
@@ -49,7 +50,8 @@ function BookingForm() {
           // contractorName: 'big benis',
           clientName: userData.firstName + " " + userData.lastName,
           clientId: userData.userId,
-          date: 'date with nazim uwu',
+          clientEmail: userData.username,
+          date: "2023-12-08",
           typeOfService: typeOfService,
           serviceDetails: serviceDetails,
           status: false,
@@ -73,7 +75,7 @@ function BookingForm() {
   };
 
   return (
-    <div>
+    <div className="container">
       
       <form onSubmit={handleSubmit}>
       <h1>Booking with {contractorName}</h1>
@@ -115,33 +117,33 @@ function BookingForm() {
     </div>
   );
 
-  return (
-    <div>
-      <form onSubmit={handleSubmit}>
-        <h1>Booking with {contractorName}</h1>
-        <label>
-          Select Date:
-          <button type="button" onClick={openCalendar}>
-            Open Calendar
-          </button>
-        </label>
-        <br />
-        {/* Other form elements */}
-        <br />
-        <button type="submit">Submit</button>
-      </form>
+  // return (
+  //   <div>
+  //     <form onSubmit={handleSubmit}>
+  //       <h1>Booking with {contractorName}</h1>
+  //       <label>
+  //         Select Date:
+  //         <button type="button" onClick={openCalendar}>
+  //           Open Calendar
+  //         </button>
+  //       </label>
+  //       <br />
+  //       {/* Other form elements */}
+  //       <br />
+  //       <button type="submit">Submit</button>
+  //     </form>
 
-      {/* Conditionally render CalendarComponent */}
-      {showCalendar && (
-        <div>
-          <CalendarComponent />
-          <button type="button" onClick={closeCalendar}>
-            Close Calendar
-          </button>
-        </div>
-      )}
-    </div>
-  );
+  //     {/* Conditionally render CalendarComponent */}
+  //     {showCalendar && (
+  //       <div>
+  //         <CalendarComponent />
+  //         <button type="button" onClick={closeCalendar}>
+  //           Close Calendar
+  //         </button>
+  //       </div>
+  //     )}
+  //   </div>
+  // );
 }
 
 export default BookingForm;

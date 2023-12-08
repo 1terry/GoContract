@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import './login.css';
 
 function Login() {
   const { login, setUserData } = useAuth(); // Destructure setUserData from the context
@@ -91,28 +92,67 @@ function Login() {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    
+      <div className="loginBox">
+        <img className="user" src="https://i.ibb.co/yVGxFPR/2.png" height="100px" width="100px" alt="User" />
+        <h3>Sign in here</h3>
+        <form onSubmit={handleSubmit}>
+          <div className="inputBox">
+            <input   
+              id="uname"
+              type="email" 
+              value={email} 
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Username" />
+            <input 
+              id="pass"  
+              type="password" 
+              value={password} 
+              onChange={(e) => setPassword(e.target.value)} 
+              placeholder="Password" />
+          </div>
+          <input type="submit" name="" value="Login" />
+        </form>
+        {/* <a href="#">Forget Password<br /></a> */}
+        <div className="text-center">
+          {/* <p style={{ color: '#59238F' }}>Sign-Up</p> */}
+        </div>
+      </div>
+    );
+    
+    
+    
+    
+    
+    
+    <div className='container'>
+    <form className='format2' onSubmit={handleSubmit}>
       <h2>Login</h2>
       {message && <div>{message}</div>} {/* Display messages to the user */}
-      <label>
-        Email:
+      <div>
+      <label className='inputField'>
+        {/* Email: */}
         <input 
           type="email" 
           value={email} 
           onChange={(e) => setEmail(e.target.value)} 
         />
       </label>
-      <label>
-        Password:
+      </div>
+      <div>
+      <label className='inputField'>
+        {/* Password: */}
         <input 
           type="password" 
           value={password} 
           onChange={(e) => setPassword(e.target.value)} 
         />
       </label>
+      </div>
       <button type="submit">Login</button>
     </form>
-  );
+    </div>
+  // );
 }
 
 export default Login;

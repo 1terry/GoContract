@@ -2,7 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom'; // Import the useNavigate hook
 import './contractorCard.css';
 
-function ContractorCard({ contractorName, contractorId, contractorTrade }) {
+function ContractorCard({ contractorName, contractorId, contractorTrade}) {
   const navigate = useNavigate(); // Initialize the useNavigate hook
 
   const handleBookingClick = () => {

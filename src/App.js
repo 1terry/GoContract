@@ -12,6 +12,8 @@ import RatingForm from './components/RatingForm';
 import CalendarComponent from './components/Calendar';
 import ManageBookings from './components/ManageBookings'; 
 import ManageTrades from './components/ManageTrades';
+import 'bootstrap/dist/css/bootstrap.min.css';
+
 
 function App() {
   return (

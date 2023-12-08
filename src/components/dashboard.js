@@ -52,12 +52,14 @@ function Dashboard() {
       const data = await response.json();
   
       console.log(data);
+
+     
   
       // Check if 'users' is an array in the response
       if (Array.isArray(data.users)) {
         // Extract usernames from the array
         const contractorName = data.users.map(user => user.contractorName);
-        const contractorId = data.users.map(user => user._id);
+        const contractorId = data.users.map(user => user.contractorId);
         const trade = data.users.map(user => user.trade);
 
         // Update jsonData with the array of usernames

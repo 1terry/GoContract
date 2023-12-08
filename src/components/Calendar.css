@@ -6,7 +6,7 @@
    box-sizing: border-box;
    height: 60px; /* Adjust the height as needed */
    width: 60px; /* Adjust the width as needed */
-   border: 1px solid #ccc; /* Border for visual separation, adjust as needed */
+   border: 1px solid #ccc; 
  }
  
  .event-marker {
