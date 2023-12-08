@@ -175,8 +175,8 @@ function ManageBookings() {
             <p>client name: {booking.clientName}</p>
             <p>Date: {new Date(booking.date).toLocaleDateString()}</p>
             <p>Booking ID: {booking._id}</p>
-            <button onClick={() => handleDecline(booking._id)}>Decline</button>
-            <button onClick={() => handleAccept(booking._id)}>Accept</button>
+            <button class="btn btn-danger" onClick={() => handleDecline(booking._id)}>Decline</button>
+            <button class="btn btn-success" onClick={() => handleAccept(booking._id)}>Accept</button>
           </div>
         ))}
       </div>
