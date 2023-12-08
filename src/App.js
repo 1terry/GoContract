@@ -8,6 +8,9 @@ import ConditionalNavigation from "./components/conditionalNavigation";
 import PrivateRoute from "./components/PrivateRoute";
 import ManageBookings from "./components/ManageBookings";
 import ManageTrades from "./components/ManageTrades";
+import GetInvoice from "./components/loadinvoice";
+import Invoice from "./components/invoice";
+import Data from "./tempData.json";
 
 function App() {
   return (

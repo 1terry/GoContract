@@ -15,9 +15,11 @@ function ContractorDashboard() {
     <div>
       <nav>{/* Your nav elements */}</nav>
       <div>Hello {userData.firstName}!</div>
-      <button onClick={() => setShowForm(true)}>Add a Service</button>
-      {showForm && <AddServiceForm onClose={() => setShowForm(false)} />}
 
+      <button onClick={() => navigate("/manageBookings")}>
+        Manage Bookings
+      </button>
+      <button onClick={() => navigate("/manageTrades")}>Manage Trades</button>
       <button onClick={() => navigate("/invoice")}>Create Invoice</button>
     </div>
   );

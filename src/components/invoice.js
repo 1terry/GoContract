@@ -110,11 +110,11 @@ function Invoice({ data }) {
         </p>
         <p>
           Address:
-          {contractorAddress}
+          {userData.address}
         </p>
         <p>
           Phone Number:
-          {contractorPhone}
+          {userData.phoneNumber}
         </p>
         <p>Email Address: {userData.username}</p>
       </div>
