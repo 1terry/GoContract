@@ -201,7 +201,7 @@ const CalendarComponent = () => {
               onChange={handleInputChange}
             />
             <br />
-            <button onClick={handleAddEvent}>Add Event</button>
+            <button class="btn btn-primary" onClick={handleAddEvent}>Add Event</button>
             <h4>Events and Bookings on {selectedDate.toDateString()}</h4>
             {(selectedDateEvents.length > 0 || selectedDateBookings.length > 0) && (
               <ul>

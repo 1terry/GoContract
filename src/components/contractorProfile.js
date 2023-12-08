@@ -122,7 +122,7 @@ const handleDeleteAccount = async () => {
   
   return (
     <div>
-      <button onClick={() => navigate('/contractorDashboard')}>Back</button>
+      <button class="btn btn-warning"onClick={() => navigate('/contractorDashboard')}>Back</button>
 
       <h2>My Profile</h2>
       <h3>My Rating: {averageRating}</h3>
@@ -162,8 +162,8 @@ const handleDeleteAccount = async () => {
         Can Manage Bookings
       </label>
       <br></br>
-      <button onClick={handleDeleteAccount}>Delete Account</button>
-      <button onClick={handleLogout}>Logout</button> 
+      <button class="btn btn-danger" onClick={handleDeleteAccount}>Delete Account</button>
+      <button class="btn btn-primary" onClick={handleLogout}>Logout</button> 
 
     </div>
   );
