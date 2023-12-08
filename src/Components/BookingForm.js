@@ -45,8 +45,8 @@ function BookingForm() {
         },
         body: JSON.stringify({
           contractorId: contractorId,
-          // contractorName: contractorName,
-          contractorName: 'big benis',
+          contractorName: contractorName,
+          // contractorName: 'big benis',
           clientName: userData.firstName + " " + userData.lastName,
           clientId: userData.userId,
           date: 'date with nazim uwu',

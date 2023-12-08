@@ -26,6 +26,8 @@ const cloudant = CloudantV1.newInstance({
 const dbUsers = 'users';
 const dbServices = 'services';
 const dbBookings = 'bookings';
+const dbRatings = 'ratings';
+
 const { v4: uuidv4 } = require('uuid'); // Import UUID
 
 // Signup Endpoint
@@ -267,6 +269,63 @@ app.post('/addBooking', async (req, res) => {
     const response = await cloudant.postDocument({ db: dbBookings, document: newBooking });
 
     res.status(201).json({ message: 'Booking added', id: response.result.id });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+// POST Endpoint to add a booking
+app.post('/addRating', async (req, res) => {
+  console.log('Request payload:', req.body);
+
+  const {
+    contractorId,
+    contractorName,
+    clientName,
+    clientId,
+    ratingValue,
+    ratingText,
+    // status
+  } = req.body;
+
+  // Validate input
+  if (
+    !contractorId ||
+    !contractorName ||
+    !clientName ||
+    !clientId ||
+    !ratingValue ||
+    !ratingText 
+    // status == null
+  ) {
+    console.log(     contractorId,
+      contractorName,
+      clientName,
+      clientId,
+      ratingValue,
+      ratingText,
+      // status
+      );
+    return res.status(400).send('Invalid request parameters');
+  }
+
+  try {
+    // Create a new booking document
+    const newRating = {
+      contractorId,
+      contractorName,
+      clientName,
+      clientId,
+      ratingValue,
+      ratingText,
+      // status,
+      // createdAt: new Date().toISOString() // Optional: add a timestamp
+    };
+    // Insert the document into Cloudant or your preferred database
+    const response = await cloudant.postDocument({ db: dbRatings, document: newRating });
+
+    res.status(201).json({ message: 'Rating added', id: response.result.id });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Internal Server Error' });

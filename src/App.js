@@ -9,6 +9,7 @@ import PrivateRoute from './components/PrivateRoute';
 import Dashboard from './components/dashboard';
 import Bookings from './components/BookingForm';
 import CalendarComponent from './components/Calendar';
+import RatingForm from './components/RatingForm';
 
 
 function App() {
@@ -21,6 +22,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
           <Route path="/bookings" element={<PrivateRoute><Bookings /></PrivateRoute>} />
+          <Route path="/ratingForm" element={<PrivateRoute><RatingForm></RatingForm></PrivateRoute>} />
 
           <Route path="/contractorDashboard" element={<PrivateRoute><ContractorDashboard /></PrivateRoute>} />
         </Routes>
