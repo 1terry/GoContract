@@ -78,13 +78,13 @@ function BookingForm() {
 
   return (
     <div className="container">
-      <button onClick={() => navigate("/dashboard")}>Back</button>
+      <button class="btn btn-warning" onClick={() => navigate("/dashboard")}>Back</button>
 
       <form onSubmit={handleSubmit}>
-        <h1>Booking with {contractorName}</h1>
+        <h4>Booking with {contractorName}</h4>
         <label>
           Select Date:
-          <button type="button" onClick={openCalendar}>
+          <button type="button" class="btn btn-primary" onClick={openCalendar}>
             Open Calendar
           </button>
         </label>
@@ -107,12 +107,12 @@ function BookingForm() {
           ></textarea>
         </label>
         <br></br>
-        <button type="submit">Submit</button>
+        <button class="btn btn-success" type="submit">Submit</button>
       </form>
       {showCalendar && (
         <div>
           <CalendarComponent />
-          <button type="button" onClick={closeCalendar}>
+          <button type="button" class="btn btn-danger" onClick={closeCalendar}>
             Close Calendar
           </button>
         </div>

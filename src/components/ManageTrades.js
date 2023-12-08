@@ -61,11 +61,11 @@ function ManageTrades() {
 
   return (
     <div>
-      <button onClick={() => navigate("/contractorDashboard")}>
+      <button class="btn btn-warning" onClick={() => navigate("/contractorDashboard")}>
         Back to Dashboard
       </button>
       <h2>Manage Trades</h2>
-      <button onClick={() => setShowForm(true)}>Add a Trade</button>
+      <button class="btn btn-success" onClick={() => setShowForm(true)}>Add a Trade</button>
       {showForm && (
         <AddServiceForm
           onClose={() => setShowForm(false)}
@@ -78,7 +78,7 @@ function ManageTrades() {
             <h3>{trade.trade}</h3>
             <p>Details: {trade.description}</p>
             <p>Listed On: {trade.createdAt}</p>
-            <button onClick={() => handleDelete(trade._id)}>Delete</button>
+            <button class="btn btn-danger"onClick={() => handleDelete(trade._id)}>Delete</button>
           </div>
         ))}
       </div>

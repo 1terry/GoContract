@@ -74,8 +74,8 @@ function RatingForm() {
           ></textarea>
         </label>
         <br></br>
-        <button type="submit">Submit</button>
-        <button onClick={() => navigate("/dashboard")}>Back</button>
+        <button class="btn btn-success"type="submit">Submit</button>
+        <button class="btn btn-warning"onClick={() => navigate("/dashboard")}>Back</button>
       </form>
     </div>
   );

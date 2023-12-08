@@ -15,17 +15,17 @@ function ContractorDashboard() {
   return (
     <div>
       <nav>{/* Your nav elements */}</nav>
-      <div>Hello {userData.firstName}!</div>
+      <div><h1>Hello {userData.firstName}!</h1></div>
 
       {userData.canManageBookings && (
-        <button onClick={() => navigate("/manageBookings")}>
+        <button class='btn btn-primary' onClick={() => navigate("/manageBookings")}>
           Manage Bookings
         </button>
       )}
       {userData.canManageTrades && (
-        <button onClick={() => navigate("/manageTrades")}>Manage Trades</button>
+        <button  class='btn btn-primary'onClick={() => navigate("/manageTrades")}>Manage Trades</button>
       )}
-      <button onClick={() => navigate("/contractorProfile")}>My Profile</button>
+      <button  class='btn btn-primary'onClick={() => navigate("/contractorProfile")}>My Profile</button>
       {userData.canManageCalendar && (
         <CalendarComponent/>
       )}

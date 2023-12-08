@@ -131,7 +131,7 @@ function ManageBookings() {
 
   return (
     <div>
-      <button onClick={() => navigate("/contractorDashboard")}>Back</button>
+      <button class="btn btn-warning"onClick={() => navigate("/contractorDashboard")}>Back</button>
       <h3>Search Clients</h3>
       <input
         type="text"
@@ -163,10 +163,10 @@ function ManageBookings() {
             <p>client name: {booking.clientName}</p>
             <p>Date: {new Date(booking.date).toLocaleDateString()}</p>
             <p>Booking ID: {booking._id}</p>
-            <button onClick={() => handleDecline(booking._id,false)}>
+            <button class="btn btn-danger"onClick={() => handleDecline(booking._id,false)}>
               Cancel Job
             </button>
-            <button
+            <button class="btn btn-success"
               onClick={() =>
                 handleInvoiceClick(booking._id, booking.clientEmail)
               }

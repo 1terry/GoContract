@@ -174,7 +174,7 @@ const CalendarComponent = () => {
   
   return (
     <div>
-          <h2>Calendar</h2>
+          <h4>Calendar</h4>
           <Calendar onChange={handleDateChange} value={selectedDate} tileContent={tileContent} />
             <h4>Add Event</h4>
             <label>Date:</label>
@@ -193,7 +193,7 @@ const CalendarComponent = () => {
               onChange={handleInputChange}
             />
             <br />
-            <button onClick={handleAddEvent}>Add Event</button>
+            <button class="btn btn-primary" onClick={handleAddEvent}>Add Event</button>
             <h4>Events and Bookings on {selectedDate.toDateString()}</h4>
             {(selectedDateEvents.length > 0 || selectedDateBookings.length > 0) && (
               <ul>
