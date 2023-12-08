@@ -1,18 +1,16 @@
 import React, { useState } from "react";
-import { useLocation } from 'react-router-dom';
-
+import { useLocation, useNavigate } from "react-router-dom";
 
 import { useAuth } from "../context/AuthContext";
 
 function RatingForm() {
-    const { state } = useLocation();
-
+  const { state } = useLocation();
+  const navigate = useNavigate();
   const { userData } = useAuth();
 
-  const [ratingValue, setRatingValue] = useState(0);
+  const [ratingValue, setRatingValue] = useState("1");
   const [ratingText, setRatingText] = useState("");
-  const { contractorName = '', contractorId = '' } = state || {};
-
+  const { contractorName = "", contractorId = "" } = state || {};
 
   const handleChange = (e) => {
     setRatingValue(e.target.value);
@@ -26,7 +24,7 @@ function RatingForm() {
       const response = await fetch("http://localhost:3001/addRating", {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
+          "Content-Type": "application/json"
         },
         body: JSON.stringify({
           contractorId: contractorId,
@@ -34,17 +32,18 @@ function RatingForm() {
           clientName: clientsName,
           clientId: userData.userId,
           ratingValue: ratingValue,
-          ratingText: ratingText,
-        }),
+          ratingText: ratingText
+        })
       });
       console.log(response);
 
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
- 
+
       const result = await response.json();
       console.log("Rating added", result);
+      navigate("/dashboard");
     } catch (error) {
       console.error("Error submitting ratings", error);
     }
@@ -56,7 +55,7 @@ function RatingForm() {
       <form onSubmit={handleSubmit}>
         <br></br>
         <br></br>
-        <h1>Rate {contractorName }</h1>
+        <h1>Rate {contractorName}</h1>
         <br></br>
         <label htmlFor="ratingDropdown">Select a Rating:</label>
         <select id="ratingDropdown" value={ratingValue} onChange={handleChange}>
@@ -76,6 +75,7 @@ function RatingForm() {
         </label>
         <br></br>
         <button type="submit">Submit</button>
+        <button onClick={() => navigate("/dashboard")}>Back</button>
       </form>
     </div>
   );

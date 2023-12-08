@@ -592,8 +592,7 @@ app.post('/addRating', async (req, res) => {
     !contractorName ||
     !clientName ||
     !clientId ||
-    !ratingValue ||
-    !ratingText 
+    !ratingValue
     // status == null
   ) {
     console.log(     contractorId,
@@ -619,6 +618,8 @@ app.post('/addRating', async (req, res) => {
       // status,
       // createdAt: new Date().toISOString() // Optional: add a timestamp
     };
+
+    console.log()
     // Insert the document into Cloudant or your preferred database
     const response = await cloudant.postDocument({ db: dbRatings, document: newRating });
 

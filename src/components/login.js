@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import './login.css';
+import { Navigation } from "./Navigation";
 
 function Login() {
   const { login, setUserData } = useAuth(); // Destructure setUserData from the context

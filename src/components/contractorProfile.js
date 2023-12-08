@@ -7,6 +7,8 @@ function ContractorProfile() {
   const { userData, setUserData } = useAuth(); // Destructure setUserData from AuthContext
   const [canManageTrades, setCanManageTrades] = useState(userData.canManageTrades);
   const [canManageBookings, setCanManageBookings] = useState(userData.canManageBookings);
+  const [canManageCalendar, setCanManageCalendar] = useState(userData.canManageCalendar);
+
   const navigate = useNavigate();
   const [averageRating, setAverageRating] = useState('Loading...');
 
@@ -48,13 +50,16 @@ function ContractorProfile() {
       setCanManageTrades(checked);
     } else if (name === 'canManageBookings') {
       setCanManageBookings(checked);
-    }
+    }else if (name === 'canManageCalendar') {
+        setCanManageCalendar(checked);
+      }
   
     // Prepare the payload for the update request using the 'checked' value directly
     const updatedData = {
       ...userData, // include other profile data if necessary
       canManageTrades: name === 'canManageTrades' ? checked : canManageTrades,
       canManageBookings: name === 'canManageBookings' ? checked : canManageBookings,
+      canManageCalendar: name === 'canManageCalendar' ? checked : canManageCalendar,
     };
   
     // Send the update request to the server
@@ -135,6 +140,16 @@ const handleDeleteAccount = async () => {
           onChange={handleCheckboxChange}
         />
         Can Manage Trades
+      </label>
+      <br></br>
+      <label>
+        <input
+          type="checkbox"
+          name="canManageCalendar"
+          checked={canManageCalendar}
+          onChange={handleCheckboxChange}
+        />
+        Can Manage Calendar
       </label>
       <br/>
       <label>
