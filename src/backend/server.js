@@ -165,14 +165,14 @@ app.post('/addService', async (req, res) => {
 
 // Modify performSearch to handle an array of users
 const performSearch = (data, contractorName) => {
+  console.log("TEST", data);
   const searchWord = contractorName;
   if (!searchWord) {
     return data; // Return all users if no search term provided
   }
 
   return data.filter((value) =>
-    value.firstName.toLowerCase().includes(searchWord.toLowerCase()) ||
-    value.lastName.toLowerCase().includes(searchWord.toLowerCase())
+    value.contractorName.toLowerCase().includes(searchWord.toLowerCase()) 
   );
 };
 
@@ -196,7 +196,7 @@ app.post('/search', async (req, res) => {
     // Fetch all users dynamically from Cloudant
     const findAllUsersQuery = {};
     
-    const usersResponse = await cloudant.postFind({ db: dbUsers, selector: findAllUsersQuery });
+    const usersResponse = await cloudant.postFind({ db: dbServices, selector: findAllUsersQuery });
 
     // Extract data from the Cloudant response (modify this based on your Cloudant structure)
     const data = usersResponse.result.docs;

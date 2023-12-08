@@ -56,30 +56,20 @@ function Dashboard() {
       // Check if 'users' is an array in the response
       if (Array.isArray(data.users)) {
         // Extract usernames from the array
-        const usernames = data.users.map(user => user.firstName + ' ' + user.lastName);
-        const firstNames = data.users.map(user => user.firstName);
-        const lastNames = data.users.map(user => user.lastName);
+        const contractorName = data.users.map(user => user.contractorName);
         const contractorId = data.users.map(user => user._id);
         const trade = data.users.map(user => user.trade);
 
-
         // Update jsonData with the array of usernames
-        setJsonData(JSON.stringify(usernames, null, 2));
+        setJsonData(JSON.stringify(contractorName, null, 2));
   
-        console.log('Number of users: ', usernames.length);
-        // for (var i = 0; i < usernames.length; i++){
-        //   console.log("showing card: ", firstNames[i], lastNames[i]);
-        //   <ContractorCard
-        //     firstName={firstNames[i]}
-        //     lastName={lastNames[i]}
-        //   />
-        // }
-        const contractorCards = usernames.map((user, index) => (
+        console.log('Number of users: ', contractorName.length);
+        
+        const contractorCards = contractorName.map((user, index) => (
           <ContractorCard
           key={index}
-          firstName = {firstNames[index]}
-          lastName = {lastNames[index]}
-          contractorTrade = {trade}
+          contractorName = {contractorName[index]}
+          contractorTrade = {trade[index]}
           contractorId = {contractorId[index]}
           />
         ));
