@@ -8,7 +8,7 @@ import ConditionalNavigation from './components/conditionalNavigation';
 import PrivateRoute from './components/PrivateRoute'; 
 import Navigation from './components/Navigation';
 import CalendarComponent from './components/Calendar';
-import ServiceRegistryClient from './components/Registry'
+import AddServiceForm from './components/AddServiceForm';
 
 function App() {
   return (
@@ -18,9 +18,8 @@ function App() {
         <Routes>
           <Route path="/signup" element={<SignUp />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/calendar" element={<CalendarComponent/>}/>
           <Route path="/contractorDashboard" element={<PrivateRoute><ContractorDashboard /></PrivateRoute>} />
-          <Route path="/calendar" element={<PrivateRoute><CalendarComponent /></PrivateRoute>} />
-          <Route path="/registry" element={<PrivateRoute><ServiceRegistryClient /></PrivateRoute>} />
         </Routes>
       </Router>
     </AuthProvider>

@@ -2,15 +2,16 @@ import React, { useState, useEffect } from 'react';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import './Calendar.css';
-
-const Username = '1234'
+import { useAuth } from '../context/AuthContext';
 
 const CalendarComponent = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [events, setEvents] = useState([]);
   const [serviceName, setServiceName] = useState('');
   const [services, setServices] = useState([]);
-  const [newEvent, setNewEvent] = useState({ username:'', date: '', title: '' });
+  const [newEvent, setNewEvent] = useState({ userId:'', date: '', title: '' });
+  const [bookings, setBooking] = useState([])
+  const { userData } = useAuth();
 
   useEffect(() => {
     // Fetch events from your database
@@ -20,21 +21,17 @@ const CalendarComponent = () => {
   const fetchEvents = async () => {
     try {
       setServiceName("Calendar")
-      const service = await fetch(`http://localhost:3001/services`);
+      const service = await fetch(`http://localhost:3002/services`);
       const Data = await service.json();
-      console.log('Received data:', Data);
       // Assuming data is an array, filter based on serviceName
       const ServiceData = Data.services.filter(service => service.serviceName == 'Calendar');
-      console.log(ServiceData[0].serviceURL)
       if (!ServiceData || ServiceData.length === 0) {
         console.error('Service unavailable');
         setEvents([]); // Clear events if no service is available
         return;
       }
       setServices(ServiceData)
-
-      newEvent.username = Username
-      console.log(services)
+      newEvent.userId = userData.userId
       const response = await fetch(`${ServiceData[0].serviceURL}/events/search`, {
         method: 'POST',
         headers: {
@@ -44,6 +41,29 @@ const CalendarComponent = () => {
       });
       const data = await response.json();
       setEvents(data);
+
+      if (userData.userType === "contractor") {
+        const bookingResponse = await fetch(`${ServiceData[0].serviceURL}/bookings/contractorsearch`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(newEvent),
+        });
+        const Bookingdata = await bookingResponse.json();
+        setBooking(Bookingdata);
+        console.log(Bookingdata.date.split('T')[0]);
+      } else {
+        const bookingResponse = await fetch(`${ServiceData[0].serviceURL}/bookings/clientsearch`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(newEvent),
+        });
+        const Bookingdata = await bookingResponse.json();
+        setBooking(Bookingdata);
+      }
     } catch (error) {
       console.error('Error fetching events:', error);
     }
@@ -61,7 +81,7 @@ const CalendarComponent = () => {
 
   const handleAddEvent = async () => {
     try {
-      newEvent.username = Username
+      newEvent.userId = userData.userId
       const response = await fetch(`${services[0].serviceURL}/events`, {
         method: 'POST',
         headers: {
@@ -72,7 +92,7 @@ const CalendarComponent = () => {
 
       if (response.ok) {
         fetchEvents(); // Refresh events after adding a new one
-        setNewEvent({username:'', date: '', title: '' });
+        setNewEvent({userId:'', date: '', title: '' });
       } else {
         console.error('Failed to add event');
       }
@@ -85,30 +105,38 @@ const CalendarComponent = () => {
     if (view === 'month') {
       const dateKey = date.toISOString().split('T')[0];
       const dateEvents = events.filter((event) => event.date === dateKey);
-  
-      if (dateEvents.length > 0) {
-        const firstEvent = dateEvents[0]; // Display only the first event
-  
-        return (
-          <div className="event-marker">
-            <div className="event">{firstEvent.title}</div>
-          </div>
-        );
+      const combinedArray = [...dateEvents, ...bookings.filter((book) => book.date.split('T')[0] === dateKey)];
+      if (combinedArray.length > 0) {
+        const firstEvent = combinedArray[0]; // Display only the first event
+        if (dateEvents < 1){
+          return (
+            <div className="event-marker">
+              <div className="event">{firstEvent.typeOfService}</div>
+            </div>
+          );
+        } else {
+          return (
+            <div className="event-marker">
+              <div className="event">{firstEvent.title}</div>
+            </div>
+          );
+        }
       }
     }
     return null;
   };
   const selectedDateKey = selectedDate.toISOString().split('T')[0];
   const selectedDateEvents = events.filter((event) => event.date === selectedDateKey);
+  const selectedDateBookings = bookings.filter((book) => book.date.split('T')[0] === selectedDateKey)
 
   
   return (
     <div>
       {!services || services.length === 0? (
-          <p>Service not available.</p>
+          <h2>Service not available.</h2>
         ) : (
           <>
-          <h2>Calendar Example</h2>
+          <h2>Calendar</h2>
           <Calendar onChange={handleDateChange} value={selectedDate} tileContent={tileContent} />
             <h3>Add Event</h3>
             <label>Date:</label>
@@ -128,16 +156,20 @@ const CalendarComponent = () => {
             />
             <br />
             <button onClick={handleAddEvent}>Add Event</button>
-          <h3>Events on {selectedDate.toDateString()}</h3>
-          {selectedDateEvents.length > 0 ? (
-            <ul>
-              {selectedDateEvents.map((event, index) => (
-                <li key={index}>{`${event.date}: ${event.title}`}</li>
-              ))}
-            </ul>
-          ) : (
-            <p>No events on the selected date.</p>
-          )}
+            <h3>Events and Bookings on {selectedDate.toDateString()}</h3>
+            {(selectedDateEvents.length > 0 || selectedDateBookings.length > 0) && (
+              <ul>
+                {selectedDateEvents.map((event, index) => (
+                  <li key={index}>{`${event.date} - Event: ${event.title}`}</li>
+                ))}
+                {selectedDateBookings.map((book, index) => (
+                  <li key={index}>{`${book.date.split('T')[0]} - Booking Service: ${book.typeOfService} - Descrtipion: ${book.serviceDetails}`}</li>
+                ))}
+              </ul>
+            )}
+            {!(selectedDateEvents.length > 0 || selectedDateBookings.length > 0) && (
+              <p>No events or bookings on the selected date.</p>
+            )}
         </>
       )}
     </div>

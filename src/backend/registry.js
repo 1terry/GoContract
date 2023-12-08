@@ -1,6 +1,6 @@
 const express = require('express');
 const app = express();
-const PORT = 3001; // Change the port if needed
+const PORT = 3002; // Change the port if needed
 const cors = require('cors');
 
 // Register services array

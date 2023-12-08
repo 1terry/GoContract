@@ -24,49 +24,15 @@ const cloudant = CloudantV1.newInstance({
 });
 
 let events = [];
-const dbEvents = 'events';
-const dbBookings = 'bookings';
+const dbEvents = 'bookings';
 
 app.post('/events/search', async (req, res) => {
   const {userId, date, title } = req.body;
   try {
     const findUserEvents = {
-      selector: { userId: userId },
+      selector: { contractorId: userId },
     };
     const eventsData = await cloudant.postFind({ db: dbEvents, selector: findUserEvents.selector });
-    const jsonResponse = JSON.parse(JSON.stringify(eventsData.result));
-    const { docs } = eventsData.result;
-    res.json(docs)
-  } catch (error) {
-    console.error('Error reading events:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
-  }
-});
-
-app.post('/bookings/contractorsearch', async (req, res) => {
-  const {userId, date, title } = req.body;
-  try {
-    const findUserEvents = {
-      selector: { contractorId: userId },
-    };
-    const eventsData = await cloudant.postFind({ db: dbBookings, selector: findUserEvents.selector });
-    const jsonResponse = JSON.parse(JSON.stringify(eventsData.result));
-    const { docs } = eventsData.result;
-    console.log(docs)
-    res.json(docs)
-  } catch (error) {
-    console.error('Error reading events:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
-  }
-});
-
-app.post('/bookings/clientsearch', async (req, res) => {
-  const {userId, date, title } = req.body;
-  try {
-    const findUserEvents = {
-      selector: { contractorId: userId },
-    };
-    const eventsData = await cloudant.postFind({ db: dbBookings, selector: findUserEvents.selector });
     const jsonResponse = JSON.parse(JSON.stringify(eventsData.result));
     const { docs } = eventsData.result;
     res.json(docs)

@@ -130,44 +130,5 @@ app.get('/getUserInfo', async (req, res) => {
 });
 
 
-// POST Endpoint to add a service
-app.post('/addService', async (req, res) => {
-  const { title, description, userId } = req.body;
-  // Validate input
-  console.log("test1");
-  console.log(title);
-  console.log(description);
-  console.log(userId);
-
-  if (!title || !description || !userId) {
-    return res.status(400).send('Title, description, and user ID are required');
-  }
-  console.log("test2");
-
-  try {
-    // Create a new service document
-    const newService = {
-      title,
-      description,
-      userId, // Assuming you want to associate the service with a user
-      createdAt: new Date().toISOString() // Optional: add a timestamp
-    };
-    console.log(newService);
-
-    // Insert the document into Cloudant
-    console.log(newService);
-    const response = await cloudant.postDocument({ db: dbServices, document: newService });
-    res.status(201).json({ message: 'Service added', id: response.result.id });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Internal Server Error' });
-  }
-});
-
-
-
-
-
-
-const PORT = process.env.PORT || 3003;
+const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

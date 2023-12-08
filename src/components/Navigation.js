@@ -6,6 +6,7 @@ function Navigation() {
     <div>
       <Link to="/login"><button>Log In</button></Link>
       <Link to="/signup"><button>Sign Up</button></Link>
+      <Link to="/Calendar"><button>Calendar</button></Link>
     </div>
   );
 }

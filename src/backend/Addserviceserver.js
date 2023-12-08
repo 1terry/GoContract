@@ -23,85 +23,49 @@ const cloudant = CloudantV1.newInstance({
   serviceUrl: process.env.CLOUDANT_URL,
 });
 
-let events = [];
-const dbEvents = 'events';
-const dbBookings = 'bookings';
+const dbUsers = 'users';
+const dbServices = 'services';
 
-app.post('/events/search', async (req, res) => {
-  const {userId, date, title } = req.body;
+const { v4: uuidv4 } = require('uuid'); // Import UUID
+
+// POST Endpoint to add a service
+app.post('/addService', async (req, res) => {
+  const { title, description, userId } = req.body;
+  // Validate input
+  console.log("test1");
+  console.log(title);
+  console.log(description);
+  console.log(userId);
+
+  if (!title || !description || !userId) {
+    return res.status(400).send('Title, description, and user ID are required');
+  }
+  console.log("test2");
+
   try {
-    const findUserEvents = {
-      selector: { userId: userId },
+    // Create a new service document
+    const newService = {
+      title,
+      description,
+      userId, // Assuming you want to associate the service with a user
+      createdAt: new Date().toISOString() // Optional: add a timestamp
     };
-    const eventsData = await cloudant.postFind({ db: dbEvents, selector: findUserEvents.selector });
-    const jsonResponse = JSON.parse(JSON.stringify(eventsData.result));
-    const { docs } = eventsData.result;
-    res.json(docs)
+    console.log(newService);
+
+    // Insert the document into Cloudant
+    console.log(newService);
+    const response = await cloudant.postDocument({ db: dbServices, document: newService });
+    res.status(201).json({ message: 'Service added', id: response.result.id });
   } catch (error) {
-    console.error('Error reading events:', error);
+    console.error(error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
 
-app.post('/bookings/contractorsearch', async (req, res) => {
-  const {userId, date, title } = req.body;
-  try {
-    const findUserEvents = {
-      selector: { contractorId: userId },
-    };
-    const eventsData = await cloudant.postFind({ db: dbBookings, selector: findUserEvents.selector });
-    const jsonResponse = JSON.parse(JSON.stringify(eventsData.result));
-    const { docs } = eventsData.result;
-    console.log(docs)
-    res.json(docs)
-  } catch (error) {
-    console.error('Error reading events:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
-  }
-});
 
-app.post('/bookings/clientsearch', async (req, res) => {
-  const {userId, date, title } = req.body;
-  try {
-    const findUserEvents = {
-      selector: { contractorId: userId },
-    };
-    const eventsData = await cloudant.postFind({ db: dbBookings, selector: findUserEvents.selector });
-    const jsonResponse = JSON.parse(JSON.stringify(eventsData.result));
-    const { docs } = eventsData.result;
-    res.json(docs)
-  } catch (error) {
-    console.error('Error reading events:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
-  }
-});
-// POST endpoint to add a new event
-
-app.post('/events', async (req, res) => {
-  const {userId, date, title } = req.body;
-  console.log('Request body:', req.body); 
-
-  if (!date || !title) {
-    return res.status(400).send('Date and title are required.');
-  }
-
-  try {
-    const newEvent = {userId, date, title};
-    events.push(newEvent);
-
-    // Add new event to Cloudant
-    const response = await cloudant.postDocument({ db: dbEvents, document: newEvent });
-
-    res.status(201).json({ message: 'Events created', id: response.result.id });
-  } catch (error) {
-    console.error(error); // Log the error for debugging
-    res.status(500).json({ error: 'Internal Server Error' });
-  }
-});
-
-const port = process.env.PORT || 3003;
-const serviceName = 'Calendar';
+const port = process.env.PORT || 3004;
 const registryPort = 3002;
+const serviceName = "AddService"
 app.listen(port, async () => {
     console.log(`${serviceName} is running on http://localhost:${port}`);
   
