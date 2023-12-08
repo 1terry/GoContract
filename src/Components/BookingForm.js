@@ -15,7 +15,7 @@ function BookingForm() {
   // Destructure values from state or provide default values
   const { contractorName = "", contractorId = "" } = state || {};
 
-  const [date, setDate] = useState("");
+  const [date, setDate] = useState(new Date());
   const [typeOfService, setTypeOfService] = useState("");
   const [serviceDetails, setServiceDetails] = useState("");
 
@@ -27,13 +27,17 @@ function BookingForm() {
     setShowCalendar(false);
   };
 
+  const handleDateChange = (date) => {
+    setDate(date);
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
       console.log(state);
       console.log(contractorId);
       console.log(userData.userId);
-      console.log("date");
+      console.log(date);
       console.log(typeOfService);
       console.log(serviceDetails);
       console.log(contractorName);
@@ -52,7 +56,7 @@ function BookingForm() {
           clientName: userData.firstName + " " + userData.lastName,
           clientId: userData.userId,
           clientEmail: userData.username,
-          date: "2023-12-08",
+          date: date,
           typeOfService: typeOfService,
           serviceDetails: serviceDetails,
           status: false
@@ -111,7 +115,7 @@ function BookingForm() {
       </form>
       {showCalendar && (
         <div>
-          <CalendarComponent />
+            <Calendar onChange={handleDateChange} value={date}  />
           <button type="button" onClick={closeCalendar}>
             Close Calendar
           </button>
