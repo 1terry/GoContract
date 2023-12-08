@@ -24,7 +24,7 @@ const cloudant = CloudantV1.newInstance({
 });
 
 const dbUsers = 'users';
-const dbServices = 'services';
+const dbServices = 'contractor-trades';
 const dbBookings = 'bookings';
 const dbRatings = 'ratings';
 
@@ -171,11 +171,20 @@ const performSearch = (data, contractorName) => {
   }
 
   return data.filter((value) =>
-    (value.firstName.toLowerCase().includes(searchWord.toLowerCase()) ||
-    value.lastName.toLowerCase().includes(searchWord.toLowerCase())) &&
-    value.userType.includes('contractor')
-    
+    value.firstName.toLowerCase().includes(searchWord.toLowerCase()) ||
+    value.lastName.toLowerCase().includes(searchWord.toLowerCase())
   );
+};
+
+const performTradeNameSearch = (data, contractorName) => {
+  const searchWord = contractorName;
+  if (!searchWord) {
+    return data; // Return all users if no search term provided
+  }
+
+  return data.filter((value) =>
+    value.trade.toLowerCase().includes(searchWord.toLowerCase() 
+  ));
 };
 
 // Modify Search Endpoint
@@ -197,6 +206,39 @@ app.post('/search', async (req, res) => {
 
     // Perform search filtering
     const filteredData = performSearch(data, contractorName);
+
+    console.log('filtered data', filteredData);
+
+    // If no results, return a 404 response
+    if (filteredData.length === 0) {
+      return res.status(404).json({ message: 'No results found' });
+    }
+
+    res.json({ message: 'Results found', users: filteredData });
+  } catch (error) {
+    console.error('Error in search:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+app.post('/searchTrade', async (req, res) => {
+  try {
+    const { contractorName } = req.body;
+    console.log('Request body: ', contractorName, req.body);
+
+    // Fetch all users dynamically from Cloudant
+    const findAllUsersQuery = {};
+    
+    const usersResponse = await cloudant.postFind({ db: dbServices, selector: findAllUsersQuery });
+
+    // Extract data from the Cloudant response (modify this based on your Cloudant structure)
+    const data = usersResponse.result.docs;
+
+    console.log('data', data);
+    console.log('contractor', contractorName);
+
+    // Perform search filtering
+    const filteredData = performTradeNameSearch(data, contractorName);
 
     console.log('filtered data', filteredData);
 

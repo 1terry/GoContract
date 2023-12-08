@@ -11,6 +11,11 @@ function Dashboard() {
 
   const [jsonData, setJsonData] = useState(''); // Added state to store JSON data
   const [passedData, setCardData] = useState('');
+  const [selectedOption, setSelectedOption] = useState(null);
+
+  const handleRadioChange = (event) => {
+    setSelectedOption(event.target.value);
+  }
 
   const handleSearchClick = async (event) => {
     event.preventDefault();
@@ -18,14 +23,27 @@ function Dashboard() {
   
     try {
       console.log('Sending:', { contractorName: contractorName });
-  
-      const response = await fetch('http://localhost:3001/search', {
+
+      let response;
+      if (selectedOption === "byName") {
+       response = await fetch('http://localhost:3001/search', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ contractorName: contractorName }),
       });
+    }
+      else {
+        response = await fetch('http://localhost:3001/searchTrade', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify ({contractorName: contractorName })
+        })
+      }
+    
   
       if (!response.ok) {
         throw new Error(`Query failed with status: ${response.status}`);
@@ -42,6 +60,7 @@ function Dashboard() {
         const firstNames = data.users.map(user => user.firstName);
         const lastNames = data.users.map(user => user.lastName);
         const contractorId = data.users.map(user => user._id);
+        const trade = data.users.map(user => user.trade);
 
 
         // Update jsonData with the array of usernames
@@ -60,6 +79,7 @@ function Dashboard() {
           key={index}
           firstName = {firstNames[index]}
           lastName = {lastNames[index]}
+          contractorTrade = {trade}
           contractorId = {contractorId[index]}
           />
         ));
@@ -100,6 +120,9 @@ function Dashboard() {
           onChange={(e) => setContractorName(e.target.value)} 
         />
       </label>
+      <label><input type="radio" name="options" value="byName" checked={selectedOption === "byName"} onChange={handleRadioChange}/>Search by Name</label>
+      <label><input type="radio" name="options" value="byType" checked={selectedOption === "byType"} onChange={handleRadioChange}/>Search by Trade Type</label>
+
       <button type="submit">Search</button>
 
       <div>
