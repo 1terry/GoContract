@@ -133,7 +133,7 @@ const CalendarComponent = () => {
 
 // ...
 
-  // Helper function to filter events by date
+// Helper function to filter events by date
   const filterEventsByDate = (events, dateKey) => {
     try {
       return events.filter((event) => new Date(event.date).toISOString().split('T')[0] === dateKey);
@@ -142,6 +142,8 @@ const CalendarComponent = () => {
       return [];
     }
   };
+
+  // Helper function to filter bookings by date and status
   const filterBookingsByDate = (bookings, dateKey) => {
     try {
       return bookings.filter((book) => new Date(book.date).toISOString().split('T')[0] === dateKey && book.status);
@@ -150,6 +152,8 @@ const CalendarComponent = () => {
       return [];
     }
   };
+
+// ...
   
   return (
     <div>
