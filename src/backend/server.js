@@ -30,6 +30,7 @@ const dbServices = "contractor-trades";
 const dbBookings = "bookings";
 const dbTrades = "contractor-trades";
 const dbRatings = "ratings";
+const dbServicesRegistry = 'services';
 
 const { v4: uuidv4 } = require("uuid"); // Import UUID
 

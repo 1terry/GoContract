@@ -3,10 +3,14 @@ import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import './Calendar.css';
 import { useAuth } from '../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 const CalendarComponent = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
+  const navigate = useNavigate();
   const [events, setEvents] = useState([]);
+  const [serviceName, setServiceName] = useState('');
+  const [services, setServices] = useState([]);
   const [newEvent, setNewEvent] = useState({ userId:'', date: '', title: '' });
   const [bookings, setBooking] = useState([])
   const { userData } = useAuth();
@@ -18,8 +22,19 @@ const CalendarComponent = () => {
 
   const fetchEvents = async () => {
     try {
-      newEvent.userId = userData.userId;
-      const response = await fetch(`http://localhost:3001/events/search`, {
+      setServiceName("Calendar")
+      const service = await fetch(`http://localhost:3002/services`);
+      const Data = await service.json();
+      // Assuming data is an array, filter based on serviceName
+      const ServiceData = Data.services.filter(service => service.serviceName == 'Calendar');
+      if (!ServiceData || ServiceData.length === 0) {
+        console.error('Service unavailable');
+        setEvents([]); // Clear events if no service is available
+        return;
+      }
+      setServices(ServiceData)
+      newEvent.userId = userData.userId
+      const response = await fetch(`${ServiceData[0].serviceURL}/events/search`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -36,7 +51,7 @@ const CalendarComponent = () => {
   
       let bookingResponse, Bookingdata;
       if (userData.userType === "contractor") {
-        bookingResponse = await fetch(`http://localhost:3001/bookings/contractorsearch`, {
+        const bookingResponse = await fetch(`${ServiceData[0].serviceURL}/bookings/contractorsearch`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -44,7 +59,7 @@ const CalendarComponent = () => {
           body: JSON.stringify(newEvent),
         });
       } else {
-        bookingResponse = await fetch(`http://localhost:3001/bookings/clientsearch`, {
+        const bookingResponse = await fetch(`${ServiceData[0].serviceURL}/bookings/clientsearch`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -73,6 +88,19 @@ const CalendarComponent = () => {
     setSelectedDate(date);
     // Additional actions based on the selected date
   };
+  const handleDelete = async (eventId) =>{
+    try {
+      const response = await fetch(`${services[0].serviceURL}/deleteEvent?eventId=${eventId}`, { method: 'DELETE' });
+      if (!response.ok) {
+        throw new Error('Failed to delete trade');
+      }
+
+      // Update the state to remove the deleted trade
+      setEvents(events => events.filter(events => events._id !== eventId));
+    } catch (error) {
+      console.error('Error deleting trade:', error);
+    }
+  }
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -96,7 +124,7 @@ const CalendarComponent = () => {
   const handleAddEvent = async () => {
     try {
       newEvent.userId = userData.userId
-      const response = await fetch(`http://localhost:3001/events`, {
+      const response = await fetch(`${services[0].serviceURL}/events`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -139,13 +167,22 @@ const CalendarComponent = () => {
     }
     return null;
   };
-  const selectedDateKey = selectedDate.toISOString().split('T')[0];
-  const selectedDateEvents = events.filter((event) => event.date === selectedDateKey);
-  const selectedDateBookings = bookings.filter((book) => book.date.split('T')[0] === selectedDateKey && book.status)
+
+const selectedDateKey = selectedDate.toISOString().split('T')[0];
+const selectedDateEvents = events.filter((event) => event.date === selectedDateKey);
+const selectedDateBookings = bookings.filter((book) => book.date.split('T')[0] === selectedDateKey && book.status)
+
 
   
   return (
     <div>
+      {!services || services.length === 0? (
+        <div>
+          <h2>Service not available.</h2>
+          <button onClick={() => navigate('/contractorDashboard')}>Back</button>
+        </div>
+        ) : (
+          <>
           <h2>Calendar</h2>
           <Calendar onChange={handleDateChange} value={selectedDate} tileContent={tileContent} />
             <h3>Add Event</h3>
@@ -182,6 +219,9 @@ const CalendarComponent = () => {
             {!(selectedDateEvents.length > 0 || selectedDateBookings.length > 0) && (
               <p>No events or bookings on the selected date.</p>
             )}
+            <button onClick={() => navigate('/contractorDashboard')}>Back</button>
+        </>
+      )}
     </div>
   );
 };
