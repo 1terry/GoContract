@@ -53,6 +53,7 @@ function AddServiceForm({ onClose }) {
         </label>
       </div>
       <button type="submit">Submit Service</button>
+      <button onClick={() =>onClose()}>Cancel</button>
     </form>
   );
 }

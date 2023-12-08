@@ -186,7 +186,7 @@ app.get('/getContractorBookings', async (req, res) => {
     if (userResponse.result.docs.length === 0) {
       return res.status(404).send('User not found');
     }
-    const contractorBookings = userResponse.result.docs[0];
+    const contractorBookings = userResponse.result.docs;
     // Return user data, excluding sensitive information like password
     res.json(contractorBookings);
   } catch (error) {
@@ -194,6 +194,53 @@ app.get('/getContractorBookings', async (req, res) => {
   }
 });
 
+app.delete('/declineBooking', async (req, res) => {
+  const { bookingId } = req.query;
+
+  if (!bookingId) {
+    return res.status(400).send('Booking ID is required');
+  }
+
+  try {
+    // Fetch the latest document to get the current _rev ID
+    const doc = await cloudant.getDocument({ db: dbBookings, docId: bookingId });
+    const currentRev = doc.result._rev;
+
+    // Now delete the document with the correct _rev ID
+    const deleteResponse = await cloudant.deleteDocument({ db: dbBookings, docId: bookingId, rev: currentRev });
+    res.status(200).json({ message: 'Booking declined', id: deleteResponse.result.id });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+// Update Booking Endpoint
+app.patch('/acceptBookingRequest', async (req, res) => {
+  const { bookingId } = req.query;
+
+  if (!bookingId) {
+    return res.status(400).send('Booking ID is required');
+  }
+
+  try {
+    // Fetch the current booking document
+    const doc = await cloudant.getDocument({ db: dbBookings, docId: bookingId });
+    const currentBooking = doc.result;
+
+    // Update the status of the booking
+    const updatedBooking = {
+      ...currentBooking,
+      status: true // Set to active
+    };
+
+    // Update the document in Cloudant
+    const updateResponse = await cloudant.putDocument({ db: dbBookings, docId: bookingId, document: updatedBooking });
+    res.status(200).json({ message: 'Booking updated', id: updateResponse.result.id });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
 
 
 const PORT = process.env.PORT || 3001;
