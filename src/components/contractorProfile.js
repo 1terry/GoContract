@@ -149,7 +149,7 @@ const handleDeleteAccount = async () => {
           checked={canManageCalendar}
           onChange={handleCheckboxChange}
         />
-        Can Manage Trades
+        Can Manage Calendar
       </label>
       <br/>
       <label>

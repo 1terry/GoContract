@@ -158,7 +158,7 @@ function ManageBookings() {
       <div>
         {filteredBookings.active.map((booking, index) => (
           <div key={index}>
-            <h3>{booking.typeOfService}</h3>
+            <h4>{booking.typeOfService}</h4>
             <p>Details: {booking.serviceDetails}</p>
             <p>client name: {booking.clientName}</p>
             <p>Date: {new Date(booking.date).toLocaleDateString()}</p>
