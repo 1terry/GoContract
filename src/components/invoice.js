@@ -13,22 +13,13 @@ function Invoice({ data }) {
   const [sampleClientAddress, setClientAddress] = useState("");
   const [sampleClientNumber, setClientNumber] = useState("");
   const [sampleClientEmail, setClientEmail] = useState("");
+  const [invoiceDueDate, setDueDate] = useState("");
 
-  const invoiceDate = data.map((record) => {
-    return record.InvoiceDate;
-  });
-
-  const dueDate = data.map((record) => {
-    return record.DueDate;
-  });
-
-  const contractorAddress = data.map((record) => {
-    return record.ContractorAddress;
-  });
-
-  const contractorPhone = data.map((record) => {
-    return record.ContractorPhone;
-  });
+  var today = new Date();
+  var dd = String(today.getDate()).padStart(2, "0");
+  var mm = String(today.getMonth() + 1).padStart(2, "0");
+  var yyyy = today.getFullYear();
+  today = mm + "/" + dd + "/" + yyyy;
 
   const saveInvoice = async (event) => {
     event.preventDefault();
@@ -41,11 +32,11 @@ function Invoice({ data }) {
         },
         body: JSON.stringify({
           invoiceId: contractorIdentifier.toString(),
-          invoiceDate: invoiceDate.toString(),
-          dueDate: dueDate.toString(),
+          invoiceDate: today.toString(),
+          dueDate: invoiceDueDate,
           contractorName: userData.firstName + " " + userData.lastName,
-          contractorAddress: contractorAddress.toString(),
-          contractorPhone: contractorPhone.toString(),
+          contractorAddress: userData.address,
+          contractorPhone: userData.phoneNumber,
           contractorEmail: userData.username,
           clientName: sampleClientName,
           clientAddress: sampleClientAddress,
@@ -95,12 +86,17 @@ function Invoice({ data }) {
         ></input>
         <p>
           Invoice Date:
-          {invoiceDate}
+          {today}
         </p>
-        <p>
+        <label>
           Due Date:
-          {dueDate}
-        </p>
+          <input
+            type="date"
+            value={invoiceDueDate}
+            placeholder="mm-dd-yyyy"
+            onChange={(e) => setDueDate(e.target.value)}
+          ></input>
+        </label>
       </div>
       <div>
         <h2>FROM</h2>
@@ -124,6 +120,7 @@ function Invoice({ data }) {
           Name:
           <input
             value={sampleClientName}
+            placeholder="Enter client name"
             onChange={(e) => setClientName(e.target.value)}
           ></input>
         </label>
@@ -131,6 +128,7 @@ function Invoice({ data }) {
           Street Address:
           <input
             value={sampleClientAddress}
+            placeholder="Enter client address"
             onChange={(e) => setClientAddress(e.target.value)}
           ></input>
         </label>
@@ -138,6 +136,7 @@ function Invoice({ data }) {
           Phone Number:
           <input
             value={sampleClientNumber}
+            placeholder="Enter client phone number"
             onChange={(e) => setClientNumber(e.target.value)}
             type="number"
           ></input>
@@ -146,6 +145,7 @@ function Invoice({ data }) {
           Email Address:
           <input
             value={sampleClientEmail}
+            placeholder="Enter client email address"
             onChange={(e) => setClientEmail(e.target.value)}
           ></input>
         </label>
