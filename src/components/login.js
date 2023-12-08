@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import './login.css';
 
 function Login() {
   const { login, setUserData } = useAuth(); // Destructure setUserData from the context
@@ -32,7 +33,7 @@ function Login() {
       console.log(data.userType);
       if (response.status === 200) {
         if (data.userType === "contractor") {
-          fetch(`/getUserInfo?username=${email}`, {
+          fetch(`http://localhost:3001/getUserInfo?username=${email}`, {
             headers: {
               Accept: "application/json"
             }
@@ -54,6 +55,31 @@ function Login() {
               // Handle any errors from fetching user data
             });
         }
+
+        if (data.userType === "homeowner") {
+          fetch(`http://localhost:3001/getUserInfo?username=${email}`, {
+              headers: {
+                'Accept': 'application/json'
+              }
+            })
+            .then(response => {
+              if (!response.ok) {
+                console.log("error");
+                throw new Error('Network response was not ok');
+              }
+              return response.json(); // Convert the response to JSON
+            })
+            .then(data => {
+              console.log('Setting user data', data);
+              login(data);
+              navigate('/dashboard');
+            })
+            .catch(error => {
+              console.error('Error fetching user data:', error);
+              // Handle any errors from fetching user data
+            });
+        }
+  
       } else {
         console.error("Login Failed email:", email, password);
         setMessage(data.message || "Login Failed"); // Display error message from server or default message
@@ -65,28 +91,67 @@ function Login() {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    
+      <div className="loginBox">
+        <img className="user" src="https://i.ibb.co/yVGxFPR/2.png" height="100px" width="100px" alt="User" />
+        <h3>Sign in here</h3>
+        <form onSubmit={handleSubmit}>
+          <div className="inputBox">
+            <input   
+              id="uname"
+              type="email" 
+              value={email} 
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Username" />
+            <input 
+              id="pass"  
+              type="password" 
+              value={password} 
+              onChange={(e) => setPassword(e.target.value)} 
+              placeholder="Password" />
+          </div>
+          <input type="submit" name="" value="Login" />
+        </form>
+        {/* <a href="#">Forget Password<br /></a> */}
+        <div className="text-center">
+          {/* <p style={{ color: '#59238F' }}>Sign-Up</p> */}
+        </div>
+      </div>
+    );
+    
+    
+    
+    
+    
+    
+    <div className='container'>
+    <form className='format2' onSubmit={handleSubmit}>
       <h2>Login</h2>
       {message && <div>{message}</div>} {/* Display messages to the user */}
-      <label>
-        Email:
-        <input
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
+      <div>
+      <label className='inputField'>
+        {/* Email: */}
+        <input 
+          type="email" 
+          value={email} 
+          onChange={(e) => setEmail(e.target.value)} 
         />
       </label>
-      <label>
-        Password:
-        <input
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
+      </div>
+      <div>
+      <label className='inputField'>
+        {/* Password: */}
+        <input 
+          type="password" 
+          value={password} 
+          onChange={(e) => setPassword(e.target.value)} 
         />
       </label>
+      </div>
       <button type="submit">Login</button>
     </form>
-  );
+    </div>
+  // );
 }
 
 export default Login;

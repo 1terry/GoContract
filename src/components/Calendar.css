@@ -1,0 +1,26 @@
+ /* Customize event marker styles */
+ @import 'react-calendar/dist/Calendar.css';
+
+ /* Override block size for calendar tiles */
+ .react-calendar__tile {
+   box-sizing: border-box;
+   height: 60px; /* Adjust the height as needed */
+   width: 60px; /* Adjust the width as needed */
+   border: 1px solid #ccc; 
+ }
+ 
+ .event-marker {
+    position: relative;
+  }
+  
+  .event {
+    background-color: #ff0000;
+    color: #ffffff;
+    padding: 2px;
+    margin: 1px;
+    font-size: 12px;
+    border-radius: 4px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }

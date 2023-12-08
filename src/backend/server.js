@@ -21,9 +21,9 @@ console.log(process.env.CLOUDANT_URL);
 
 const cloudant = CloudantV1.newInstance({
   authenticator: new IamAuthenticator({
-    apikey: process.env.CLOUDANT_APIKEY
+    apikey: '7XKuFVh47HPxHkw9J5BgWrJwLkwzafYgN6KNLt0xDhUw',
   }),
-  serviceUrl: process.env.CLOUDANT_URL
+  serviceUrl:'https://3debe265-efb1-4d02-86a8-4be42f738690-bluemix.cloudantnosqldb.appdomain.cloud',
 });
 
 const invoiceDb = "invoice";
@@ -392,6 +392,239 @@ app.post("/addService", async (req, res) => {
   }
 });
 
+// Modify performSearch to handle an array of users
+const performSearch = (data, contractorName) => {
+  const searchWord = contractorName;
+  if (!searchWord) {
+    return data; // Return all users if no search term provided
+  }
+
+  return data.filter((value) =>
+    value.contractorName.toLowerCase().includes(searchWord.toLowerCase()) 
+  );
+};
+
+const performTradeNameSearch = (data, contractorName) => {
+  const searchWord = contractorName;
+  if (!searchWord) {
+    return data; // Return all users if no search term provided
+  }
+
+  return data.filter((value) =>
+    value.trade.toLowerCase().includes(searchWord.toLowerCase() 
+  ));
+};
+
+const performRatingSearch = (data, contractorId) => {
+  const searchWord = contractorId;
+  if (!searchWord) {
+    return data; // Return all users if no search term provided
+  }
+
+  return data.filter((value) =>
+    value.contractorId.toLowerCase().includes(searchWord.toLowerCase() 
+  ));
+};
+
+// Modify Search Endpoint
+app.post('/search', async (req, res) => {
+  try {
+    const { contractorName } = req.body;
+    console.log('Request body: ', contractorName, req.body);
+
+    // Fetch all users dynamically from Cloudant
+    const findAllUsersQuery = {};
+    
+    const usersResponse = await cloudant.postFind({ db: dbServices, selector: findAllUsersQuery });
+
+    // Extract data from the Cloudant response (modify this based on your Cloudant structure)
+    const data = usersResponse.result.docs;
+
+    console.log('data', data);
+    console.log('contractor', contractorName);
+
+    // Perform search filtering
+    const filteredData = performSearch(data, contractorName);
+
+    console.log('filtered data', filteredData);
+
+    // If no results, return a 404 response
+    if (filteredData.length === 0) {
+      return res.status(404).json({ message: 'No results found' });
+    }
+
+    res.json({ message: 'Results found', users: filteredData });
+  } catch (error) {
+    console.error('Error in search:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+app.post('/searchTrade', async (req, res) => {
+  try {
+    const { contractorName } = req.body;
+    console.log('Request body: ', contractorName, req.body);
+
+    // Fetch all users dynamically from Cloudant
+    const findAllUsersQuery = {};
+    
+    const usersResponse = await cloudant.postFind({ db: dbServices, selector: findAllUsersQuery });
+
+    // Extract data from the Cloudant response (modify this based on your Cloudant structure)
+    const data = usersResponse.result.docs;
+
+    console.log('data', data);
+    console.log('contractor', contractorName);
+
+    // Perform search filtering
+    const filteredData = performTradeNameSearch(data, contractorName);
+
+    console.log('filtered data', filteredData);
+
+    // If no results, return a 404 response
+    if (filteredData.length === 0) {
+      return res.status(404).json({ message: 'No results found' });
+    }
+
+    res.json({ message: 'Results found', users: filteredData });
+  } catch (error) {
+    console.error('Error in search:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+// POST Endpoint to add a booking
+app.post('/addBooking', async (req, res) => {
+  console.log('Request payload:', req.body);
+
+  const {
+    contractorId,
+    contractorName,
+    clientName,
+    clientId,
+    clientEmail,
+    date,
+    typeOfService,
+    serviceDetails,
+    status
+  } = req.body;
+
+  // Validate input
+  if (
+    !contractorId ||
+    !contractorName ||
+    !clientName ||
+    !clientId ||
+    !clientEmail ||
+    !date ||
+    !typeOfService ||
+    !serviceDetails ||
+    status == null
+  ) {
+    console.log( contractorId,
+      contractorName,
+      clientName,
+      clientId,
+      clientEmail,
+      date,
+      typeOfService,
+      serviceDetails,
+      status);
+    return res.status(400).send('Invalid request parameters');
+  }
+
+  try {
+    // Create a new booking document
+    const newBooking = {
+      contractorId,
+      contractorName,
+      clientName,
+      clientId,
+      clientEmail,
+      date,
+      typeOfService,
+      serviceDetails,
+      status,
+      createdAt: new Date().toISOString() // Optional: add a timestamp
+    };
+    // Insert the document into Cloudant or your preferred database
+    const response = await cloudant.postDocument({ db: dbBookings, document: newBooking });
+
+    res.status(201).json({ message: 'Booking added', id: response.result.id });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+app.post('/rating', async (req, res) => {
+  const {
+    contractorId
+  } = req.body
+
+  if (contractorId) {
+
+  }
+})
+
+// POST Endpoint to add a booking
+app.post('/addRating', async (req, res) => {
+  console.log('Request payload:', req.body);
+
+  const {
+    contractorId,
+    contractorName,
+    clientName,
+    clientId,
+    ratingValue,
+    ratingText,
+    // status
+  } = req.body;
+
+  // Validate input
+  if (
+    !contractorId ||
+    !contractorName ||
+    !clientName ||
+    !clientId ||
+    !ratingValue ||
+    !ratingText 
+    // status == null
+  ) {
+    console.log(     contractorId,
+      contractorName,
+      clientName,
+      clientId,
+      ratingValue,
+      ratingText,
+      // status
+      );
+    return res.status(400).send('Invalid request parameters');
+  }
+
+  try {
+    // Create a new booking document
+    const newRating = {
+      contractorId,
+      contractorName,
+      clientName,
+      clientId,
+      ratingValue,
+      ratingText,
+      // status,
+      // createdAt: new Date().toISOString() // Optional: add a timestamp
+    };
+    // Insert the document into Cloudant or your preferred database
+    const response = await cloudant.postDocument({ db: dbRatings, document: newRating });
+
+    res.status(201).json({ message: 'Rating added', id: response.result.id });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+
 // getContractor Endpoint
 app.get("/getContractorBookings", async (req, res) => {
   const { userId } = req.query; // Assuming the username is passed as a query parameter
@@ -574,6 +807,81 @@ app.get("/getContractorTrades", async (req, res) => {
   }
 });
 
+let events = [];
+const dbEvents = 'events';
+
+app.post('/events/search', async (req, res) => {
+  const {userId, date, title } = req.body;
+  try {
+    const findUserEvents = {
+      selector: { userId: userId },
+    };
+    const eventsData = await cloudant.postFind({ db: dbEvents, selector: findUserEvents.selector });
+    const jsonResponse = JSON.parse(JSON.stringify(eventsData.result));
+    const { docs } = eventsData.result;
+    res.json(docs)
+  } catch (error) {
+    console.error('Error reading events:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+app.post('/bookings/contractorsearch', async (req, res) => {
+  const {userId, date, title } = req.body;
+  try {
+    const findUserEvents = {
+      selector: { contractorId: userId },
+    };
+    const eventsData = await cloudant.postFind({ db: dbBookings, selector: findUserEvents.selector });
+    const jsonResponse = JSON.parse(JSON.stringify(eventsData.result));
+    const { docs } = eventsData.result;
+    console.log(docs)
+    res.json(docs)
+  } catch (error) {
+    console.error('Error reading events:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+app.post('/bookings/clientsearch', async (req, res) => {
+  const {userId, date, title } = req.body;
+  try {
+    const findUserEvents = {
+      selector: { contractorId: userId },
+    };
+    const eventsData = await cloudant.postFind({ db: dbBookings, selector: findUserEvents.selector });
+    const jsonResponse = JSON.parse(JSON.stringify(eventsData.result));
+    const { docs } = eventsData.result;
+    res.json(docs)
+  } catch (error) {
+    console.error('Error reading events:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+// POST endpoint to add a new event
+
+app.post('/events', async (req, res) => {
+  const {userId, date, title } = req.body;
+  console.log('Request body:', req.body); 
+
+  if (!date || !title) {
+    return res.status(400).send('Date and title are required.');
+  }
+
+  try {
+    const newEvent = {userId, date, title};
+    events.push(newEvent);
+
+    // Add new event to Cloudant
+    const response = await cloudant.postDocument({ db: dbEvents, document: newEvent });
+
+    res.status(201).json({ message: 'Events created', id: response.result.id });
+  } catch (error) {
+    console.error(error); // Log the error for debugging
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
 // Update UserProfile Endpoint in server.js
 app.patch("/updateUserProfile", async (req, res) => {
   const { docId, updates } = req.body;
@@ -664,6 +972,25 @@ app.get('/getContractorRating', async (req, res) => {
   }
 });
 
+
+app.delete('/deleteEvent', async (req, res) => {
+  const { eventId } = req.query;
+  if (!eventId) {
+    return res.status(400).send('Event is required');
+  }
+
+  try {
+    // Fetch the latest document to get the current _rev ID
+    const doc = await cloudant.getDocument({ db: dbEvents, docId: eventId });
+    const currentRev = doc.result._rev;
+    // Now delete the document with the correct _rev ID
+    const deleteResponse = await cloudant.deleteDocument({ db: dbEvents, docId: eventId, rev: currentRev });
+    res.status(200).json({ message: 'Event deleted', id: deleteResponse.result.id });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

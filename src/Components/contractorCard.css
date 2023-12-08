@@ -1,0 +1,21 @@
+/* .format{
+    position: absolute;
+    height: 300;
+    top: 20px;
+    left: 50px;
+    z-index: 1000;
+}
+
+*/
+
+
+.formatCard{
+    background-color: rgb(132, 218, 218);
+    width: 330px;
+    height: 100px;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding-top: 2px;
+    margin: 20px;
+}
