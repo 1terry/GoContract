@@ -83,6 +83,13 @@ app.post("/signup", async (req, res) => {
       password: hashedPassword,
       userType
     };
+
+    // Add manage permissions for contractors
+    if (userType === "contractor") {
+      user.canManageBookings = true;
+      user.canManageTrades = true;
+    }
+
     const response = await cloudant.postDocument({
       db: dbUsers,
       document: user
@@ -491,6 +498,64 @@ app.get("/getContractorTrades", async (req, res) => {
     res.json(contractorTrades);
   } catch (error) {
     res.status(500).json({ error: error.message });
+  }
+});
+
+// Update UserProfile Endpoint in server.js
+app.patch("/updateUserProfile", async (req, res) => {
+  const { docId, updates } = req.body;
+
+  if (!docId) {
+    return res.status(400).send("User ID is required");
+  }
+
+  try {
+    const doc = await cloudant.getDocument({ db: dbUsers, docId: docId });
+    const currentUser = doc.result;
+    // Update the user document with the new fields
+    const updatedUser = {
+      ...currentUser,
+      ...updates, // This contains the fields to be updated
+      _rev: currentUser._rev // Include the latest _rev ID
+    };
+
+    // Update the document in Cloudant
+    const updateResponse = await cloudant.putDocument({
+      db: dbUsers,
+      docId: docId,
+      document: updatedUser
+    });
+    res
+      .status(200)
+      .json({ message: "User profile updated", id: updateResponse.result.id });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+app.delete("/deleteUserAccount", async (req, res) => {
+  const { docId } = req.query;
+
+  if (!docId) {
+    return res.status(400).send("User ID is required");
+  }
+
+  try {
+    // Fetch the current user document to get the _rev ID
+    const doc = await cloudant.getDocument({ db: dbUsers, docId: docId });
+    const currentRev = doc.result._rev;
+
+    // Delete the document using the _rev ID
+    await cloudant.deleteDocument({
+      db: dbUsers,
+      docId: docId,
+      rev: currentRev
+    });
+    res.status(200).send("User account deleted successfully");
+  } catch (error) {
+    console.error("Error deleting user account:", error);
+    res.status(500).json({ error: "Internal Server Error" });
   }
 });
 

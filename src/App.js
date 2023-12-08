@@ -10,7 +10,7 @@ import ManageBookings from "./components/ManageBookings";
 import ManageTrades from "./components/ManageTrades";
 import GetInvoice from "./components/loadinvoice";
 import Invoice from "./components/invoice";
-import Data from "./tempData.json";
+import ContractorProfile from "./components/contractorProfile";
 
 function App() {
   return (
@@ -40,6 +40,38 @@ function App() {
             element={
               <PrivateRoute>
                 <Invoice data={Data} />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/contractorDashboard"
+            element={
+              <PrivateRoute>
+                <ContractorDashboard />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/manageBookings"
+            element={
+              <PrivateRoute>
+                <ManageBookings />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/manageTrades"
+            element={
+              <PrivateRoute>
+                <ManageTrades />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/contractorProfile"
+            element={
+              <PrivateRoute>
+                <ContractorProfile />
               </PrivateRoute>
             }
           />
