@@ -26,7 +26,10 @@ function ContractorDashboard() {
         <button onClick={() => navigate("/manageTrades")}>Manage Trades</button>
       )}
       <button onClick={() => navigate("/contractorProfile")}>My Profile</button>
-      <CalendarComponent/>
+      {userData.canManageCalendar && (
+        <CalendarComponent/>
+      )}
+      
     </div>
   );
 }
