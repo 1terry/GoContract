@@ -84,7 +84,14 @@ function ContractorProfile() {
     }
   };
   
-  // Inside ContractorProfile component
+  
+  const handleLogout = () => {
+    // Clear the user data from AuthContext
+    setUserData({});
+
+    // Navigate to the login page
+    navigate('/login');
+  };
 
 const handleDeleteAccount = async () => {
     const confirmDelete = window.confirm("Are you sure you want to delete your account? This cannot be undone.");
@@ -141,6 +148,7 @@ const handleDeleteAccount = async () => {
       </label>
       <br></br>
       <button onClick={handleDeleteAccount}>Delete Account</button>
+      <button onClick={handleLogout}>Logout</button>
 
     </div>
   );
