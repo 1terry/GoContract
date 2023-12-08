@@ -170,7 +170,7 @@ const CalendarComponent = () => {
   const selectedDateKey = new Date(selectedDate).toISOString().split('T')[0];
   const selectedDateEvents = filterEventsByDate(events, selectedDateKey);
   const selectedDateBookings = filterBookingsByDate(bookings, selectedDateKey);
-// ...
+
   
   return (
     <div>
