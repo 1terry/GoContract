@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import './login.css';
 
 function SignUp() {
   const navigate = useNavigate();
@@ -84,8 +85,16 @@ function SignUp() {
         <input 
             onChange={(e) => setEmail(e.target.value)}
             placeholder="email" />
+        
+        <input
+            type="password"
+            value={password}
+            placeholder="password"
+            onChange={(e) => setPassword(e.target.value)}
+          />
 
-        <select value={userType} onChange={(e) => setUserType(e.target.value)}>
+        <select className="buttonSpace" 
+          value={userType} onChange={(e) => setUserType(e.target.value)}>
           <option value="" disabled selected>
           Select User Type
           </option>
@@ -93,11 +102,7 @@ function SignUp() {
           <option value="homeowner">Home Owner</option>
           </select>
 
-          <input 
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
+       
       </div>
       <input type="submit" name="" value="Sign up" />
     </form>

@@ -75,10 +75,12 @@ function BookingForm() {
   };
 
   return (
-    <div className="container">
-      
+    <div className="containerBook">
+      <div className="floatLeft">
+
       <form onSubmit={handleSubmit}>
       <h1>Booking with {contractorName}</h1>
+      <hr></hr>
         <label>
           Select Date:
           <button type="button" onClick={openCalendar}>
@@ -86,6 +88,7 @@ function BookingForm() {
           </button>
         </label>
         <br></br>
+        <div >
         <label>
           Type of Service Request
           <input
@@ -103,17 +106,22 @@ function BookingForm() {
             onChange={(e) => setServiceDetails(e.target.value)}
           ></textarea>
         </label>
+        </div>
         <br></br>
         <button type="submit">Submit</button>
-      </form>
-      {showCalendar && (
-        <div>
-          <CalendarComponent />
-          <button type="button" onClick={closeCalendar}>
-            Close Calendar
-          </button>
-        </div>
-      )}
+      </form>       
+      </div>
+
+      <div className="floatRight">
+        {showCalendar && (
+          <div>
+            <CalendarComponent />
+            <button type="button" onClick={closeCalendar}>
+              Close Calendar
+            </button>
+          </div>
+        )}
+      </div>
     </div>
   );
 

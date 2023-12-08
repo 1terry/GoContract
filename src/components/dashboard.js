@@ -52,8 +52,6 @@ function Dashboard() {
       const data = await response.json();
   
       console.log(data);
-
-     
   
       // Check if 'users' is an array in the response
       if (Array.isArray(data.users)) {
@@ -102,23 +100,23 @@ function Dashboard() {
 
   return (
     <form onSubmit={handleSearchClick} className='container-search'>
-      <div className='searchBar'>
+      <div className='searchHeader'>
         <h2>Search</h2>
-        {message && <div>{message}</div>}
+        {/* {message && <div>{message}</div>} */}
         <label>
-          Search for contractor
           <input 
             type="text" 
             value={contractorName} 
             onChange={(e) => setContractorName(e.target.value)} 
+            placeholder='Search here'
           />
         </label>
         <label><input type="radio" name="options" value="byName" checked={selectedOption === "byName"} onChange={handleRadioChange}/>Search by Name</label>
         <label><input type="radio" name="options" value="byType" checked={selectedOption === "byType"} onChange={handleRadioChange}/>Search by Trade Type</label>
 
-        <button type="submit">Search</button>
+        <button type="submit" class="btn btn-success">Search</button>
       </div>
-      <div>
+      <div className='searchBar'>
         {/* <p>JSON Data:</p> */}
         {/* <pre>{jsonData}</pre> */}
         <pre>{passedData}</pre>

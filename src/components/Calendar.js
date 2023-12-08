@@ -148,7 +148,7 @@ const CalendarComponent = () => {
     <div>
           <h2>Calendar</h2>
           <Calendar onChange={handleDateChange} value={selectedDate} tileContent={tileContent} />
-            <h3>Add Event</h3>
+            <h4>Add Event</h4>
             <label>Date:</label>
             <input
               type="date"
@@ -166,7 +166,7 @@ const CalendarComponent = () => {
             />
             <br />
             <button onClick={handleAddEvent}>Add Event</button>
-            <h3>Events and Bookings on {selectedDate.toDateString()}</h3>
+            <h4>Events and Bookings on {selectedDate.toDateString()}</h4>
             {(selectedDateEvents.length > 0 || selectedDateBookings.length > 0) && (
               <ul>
                 {selectedDateEvents.map((event, index) => (

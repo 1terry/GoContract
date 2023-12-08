@@ -17,11 +17,11 @@ function ContractorCard({ contractorName, contractorId, contractorTrade}) {
 
   return (
     <div className='formatCard'>
-      <p>Name: {contractorName}</p>
-      <p>Trade: {contractorTrade}</p>
-      <div>
-        <button onClick={handleBookingClick}>Booking</button>
-        <button onClick={handleRateClick}>Rate</button>
+      <p><b>Name:</b> {contractorName}</p>
+      <p><b>Trade:</b> {contractorTrade}</p>
+      <div >
+        <button className='btn btn-primary' onClick={handleBookingClick}>Booking</button>
+        <button className='btn btn-primary' onClick={handleRateClick}>Rate</button>
       </div>
     </div>
   );
