@@ -6,9 +6,8 @@ import SignUp from "./components/signup";
 import ContractorDashboard from "./components/contractorDashboard";
 import ConditionalNavigation from "./components/conditionalNavigation";
 import PrivateRoute from "./components/PrivateRoute";
-import Invoice from "./components/invoice";
-import Data from "./tempData.json";
-import GetInvoice from "./components/loadinvoice";
+import ManageBookings from "./components/ManageBookings";
+import ManageTrades from "./components/ManageTrades";
 
 function App() {
   return (
