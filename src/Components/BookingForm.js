@@ -67,6 +67,7 @@ function BookingForm() {
 
       const result = await response.json();
       console.log("Booking added", result);
+      navigate("/dashboard");
     } catch (error) {
       console.error("Error submitting booking", error);
     }
