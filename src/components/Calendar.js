@@ -41,15 +41,9 @@ const CalendarComponent = () => {
         },
         body: JSON.stringify(newEvent),
       });
-      let data = await response.json();
-  
-      // Ensure that data is an array
-      if (!Array.isArray(data)) {
-        data = [];
-      }
+      const data = await response.json();
       setEvents(data);
-  
-      let bookingResponse, Bookingdata;
+
       if (userData.userType === "contractor") {
         const bookingResponse = await fetch(`${ServiceData[0].serviceURL}/bookings/contractorsearch`, {
           method: 'POST',
@@ -58,6 +52,9 @@ const CalendarComponent = () => {
           },
           body: JSON.stringify(newEvent),
         });
+        const Bookingdata = await bookingResponse.json();
+        setBooking(Bookingdata);
+        console.log(Bookingdata.date.split('T')[0]);
       } else {
         const bookingResponse = await fetch(`${ServiceData[0].serviceURL}/bookings/clientsearch`, {
           method: 'POST',
@@ -66,37 +63,21 @@ const CalendarComponent = () => {
           },
           body: JSON.stringify(newEvent),
         });
+        const Bookingdata = await bookingResponse.json();
+        setBooking(Bookingdata);
       }
-      Bookingdata = await bookingResponse.json();
-  
-      // Ensure that Bookingdata is an array
-      if (!Array.isArray(Bookingdata)) {
-        Bookingdata = [];
-      }
-      setBooking(Bookingdata);
-  
     } catch (error) {
       console.error('Error fetching events:', error);
-      setEvents([]); // Ensure that events and bookings are set to an empty array on error
-      setBooking([]);
     }
   };
-  
-  // Other parts of your component remain the same
-  
+
   const handleDateChange = (date) => {
     setSelectedDate(date);
     // Additional actions based on the selected date
   };
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setNewEvent((prevEvent) => ({ ...prevEvent, [name]: value }));
-  };
-
   const handleDelete = async (eventId) =>{
     try {
-      const response = await fetch(`http://localhost:3001/deleteEvent?eventId=${eventId}`, { method: 'DELETE' });
+      const response = await fetch(`${services[0].serviceURL}/deleteEvent?eventId=${eventId}`, { method: 'DELETE' });
       if (!response.ok) {
         throw new Error('Failed to delete trade');
       }
@@ -107,6 +88,11 @@ const CalendarComponent = () => {
       console.error('Error deleting trade:', error);
     }
   }
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setNewEvent((prevEvent) => ({ ...prevEvent, [name]: value }));
+  };
 
   const handleAddEvent = async () => {
     try {
@@ -154,12 +140,31 @@ const CalendarComponent = () => {
     }
     return null;
   };
-
-const selectedDateKey = selectedDate.toISOString().split('T')[0];
-const selectedDateEvents = events.filter((event) => event.date === selectedDateKey);
-const selectedDateBookings = bookings.filter((book) => book.date.split('T')[0] === selectedDateKey && book.status)
-
-
+  
+  // ...
+  
+  // Helper function to filter events by date
+  const filterEventsByDate = (events, dateKey) => {
+    try {
+      return events.filter((event) => new Date(event.date).toISOString().split('T')[0] === dateKey);
+    } catch (error) {
+      console.error('Error filtering events by date:', error);
+      return [];
+    }
+  };
+  
+  // Helper function to filter bookings by date and status
+  const filterBookingsByDate = (bookings, dateKey) => {
+    try {
+      return bookings.filter((book) => new Date(book.date).toISOString().split('T')[0] === dateKey && book.status);
+    } catch (error) {
+      console.error('Error filtering bookings by date and status:', error);
+      return [];
+    }
+  };
+  const selectedDateKey = new Date(selectedDate).toISOString().split('T')[0];
+  const selectedDateEvents = filterEventsByDate(events, selectedDateKey);
+  const selectedDateBookings = filterBookingsByDate(bookings, selectedDateKey);
   
   return (
     <div>
