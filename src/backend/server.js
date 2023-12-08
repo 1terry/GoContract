@@ -31,6 +31,7 @@ const dbUsers = "users";
 const dbServices = "contractor-trades";
 const dbBookings = "bookings";
 const dbTrades = "contractor-trades";
+const dbRatings = "ratings";
 
 const { v4: uuidv4 } = require("uuid"); // Import UUID
 
@@ -630,6 +631,39 @@ app.delete("/deleteUserAccount", async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
+
+
+app.get('/getContractorRating', async (req, res) => {
+  const { contractorId } = req.query;
+
+  if (!contractorId) {
+    return res.status(400).send('Contractor ID is required');
+  }
+
+  try {
+    // Fetch all ratings for the given contractorId
+    const findRatingsQuery = {
+      selector: { contractorId: contractorId }
+    };
+    console.log()
+    const ratingsResponse = await cloudant.postFind({ 
+      db: dbRatings, 
+      selector: findRatingsQuery.selector 
+    });
+
+    const ratings = ratingsResponse.result.docs;
+
+    // Calculate the average rating
+    const totalRating = ratings.reduce((sum, rating) => sum + parseInt(rating.ratingValue, 10), 0);
+    const averageRating = ratings.length > 0 ? (totalRating / ratings.length).toFixed(1) : 'No ratings';
+
+    res.json({ averageRating });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
