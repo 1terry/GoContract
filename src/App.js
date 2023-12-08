@@ -17,6 +17,7 @@ import Invoice from "./components/invoice";
 import ContractorProfile from "./components/contractorProfile";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import ServiceRegistryClient from './components/Registry'
+import AddServiceForm from './components/AddServiceForm'
 
 function App() {
   return (

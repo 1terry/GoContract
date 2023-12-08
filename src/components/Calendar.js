@@ -88,19 +88,6 @@ const CalendarComponent = () => {
     setSelectedDate(date);
     // Additional actions based on the selected date
   };
-  const handleDelete = async (eventId) =>{
-    try {
-      const response = await fetch(`${services[0].serviceURL}/deleteEvent?eventId=${eventId}`, { method: 'DELETE' });
-      if (!response.ok) {
-        throw new Error('Failed to delete trade');
-      }
-
-      // Update the state to remove the deleted trade
-      setEvents(events => events.filter(events => events._id !== eventId));
-    } catch (error) {
-      console.error('Error deleting trade:', error);
-    }
-  }
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;

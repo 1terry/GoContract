@@ -202,8 +202,11 @@ function ManageBookings() {
           </div>
         ))}
       </div>
+      </>
+      )}
     </div>
   );
+  
 }
 
 export default ManageBookings;

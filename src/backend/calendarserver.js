@@ -52,6 +52,7 @@ app.post('/bookings/contractorsearch', async (req, res) => {
     const eventsData = await cloudant.postFind({ db: dbBookings, selector: findUserEvents.selector });
     const jsonResponse = JSON.parse(JSON.stringify(eventsData.result));
     const { docs } = eventsData.result;
+    console.log(docs)
     res.json(docs)
   } catch (error) {
     console.error('Error reading events:', error);
@@ -74,6 +75,30 @@ app.post('/bookings/clientsearch', async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
+// POST endpoint to add a new event
+
+app.post('/events', async (req, res) => {
+  const {userId, date, title } = req.body;
+  console.log('Request body:', req.body); 
+
+  if (!date || !title) {
+    return res.status(400).send('Date and title are required.');
+  }
+
+  try {
+    const newEvent = {userId, date, title};
+    events.push(newEvent);
+
+    // Add new event to Cloudant
+    const response = await cloudant.postDocument({ db: dbEvents, document: newEvent });
+
+    res.status(201).json({ message: 'Events created', id: response.result.id });
+  } catch (error) {
+    console.error(error); // Log the error for debugging
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
 // POST endpoint to add a new event
 
 app.post('/events', async (req, res) => {
