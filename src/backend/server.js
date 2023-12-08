@@ -5,6 +5,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const bcrypt = require("bcryptjs");
+const nodemailer = require("nodemailer");
 
 const app = express();
 
@@ -137,6 +138,36 @@ app.post("/login", async (req, res) => {
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
+});
+
+app.post("/sendInvoiceByEmail", async (req, res) => {
+  // const { toEmail, subject, text, html } = req.body; // These should be provided in the request
+  // // Configure your email transport
+  // const transporter = nodemailer.createTransport({
+  //   service: "outlook", // or your preferred email service
+  //   auth: {
+  //     user: "joemamadelulu", // your email
+  //     pass: "JoeMamaSoFat69" // your email password
+  //   }
+  // });
+  // // Define email options
+  // const mailOptions = {
+  //   from: "joemamadelulu@gmail.com", // sender address
+  //   to: toEmail, // receiver (client's email)
+  //   subject: subject,
+  //   text: text, // plain text body
+  //   html: html // html body (optional)
+  // };
+  // // Send email
+  // transporter.sendMail(mailOptions, (error, info) => {
+  //   if (error) {
+  //     console.log(error);
+  //     res.status(500).send("Error sending email");
+  //   } else {
+  //     console.log("Email sent: " + info.response);
+  //     res.status(200).send("Email sent successfully");
+  //   }
+  // });
 });
 
 // Create invoice endpoint

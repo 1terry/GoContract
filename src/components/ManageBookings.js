@@ -105,7 +105,7 @@ function ManageBookings() {
     }
   };
 
-  const handleInvoiceClick = async (bookingId) => {
+  const handleInvoiceClick = async (bookingId, clientEmail) => {
     try {
       const response = await fetch(
         `/getInvoiceByBookingId?identifier=${bookingId}`
@@ -116,7 +116,9 @@ function ManageBookings() {
         navigate("/getInvoice", { state: { invoiceId: invoice.invoiceId } });
       }
     } catch (error) {
-      navigate(`/invoice/${bookingId}`);
+      navigate("/invoice", {
+        state: { bookingId: bookingId, clientEmail: clientEmail }
+      });
     }
   };
 
@@ -157,7 +159,11 @@ function ManageBookings() {
             <button onClick={() => handleDecline(booking._id)}>
               Cancel Job
             </button>
-            <button onClick={() => handleInvoiceClick(booking._id)}>
+            <button
+              onClick={() =>
+                handleInvoiceClick(booking._id, booking.clientEmail)
+              }
+            >
               Invoice
             </button>
           </div>

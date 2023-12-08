@@ -7,7 +7,7 @@ function Invoice() {
   const navigate = useNavigate();
   const { userData } = useAuth();
   const location = useLocation();
-  const { bookingId } = useParams();
+  const { bookingId, clientEmail } = location.state;
 
   const [inputFields, setInputFields] = useState([{ name: "", value: "" }]);
   const [contractorIdentifier, setIdentifier] = useState("");
@@ -23,6 +23,34 @@ function Invoice() {
   var mm = String(today.getMonth() + 1).padStart(2, "0");
   var yyyy = today.getFullYear();
   today = mm + "/" + dd + "/" + yyyy;
+
+  const sendEmail = async () => {
+    try {
+      const emailResponse = await fetch(
+        "http://localhost:3001/sendInvoiceByEmail",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            toEmail: clientEmail, // Client's email address
+            subject: `Hello ${sampleClientName}`,
+            text: "Here are the details of your invoice...", // The content of the email
+            html: "<p>HTML version of your invoice details</p>" // Optionally, you can use HTML
+          })
+        }
+      );
+
+      if (!emailResponse.ok) {
+        throw new Error("Failed to send email");
+      }
+
+      console.log("Email sent successfully");
+    } catch (error) {
+      console.error("Error sending email:", error);
+    }
+  };
 
   const saveInvoice = async (event) => {
     event.preventDefault();
@@ -44,7 +72,7 @@ function Invoice() {
           clientName: sampleClientName,
           clientAddress: sampleClientAddress,
           clientPhone: sampleClientNumber,
-          clientEmail: sampleClientEmail,
+          clientEmail: clientEmail,
           listOfServices: inputFields,
           bookingId: bookingId
         })
@@ -52,6 +80,7 @@ function Invoice() {
       const data = await response.json();
       if (response.status === 201) {
         setMessage("Invoice saved!");
+        // await sendEmail(); // Email not working; no free account
       } else {
         setMessage("Invoice save error.");
       }
@@ -150,11 +179,7 @@ function Invoice() {
         </label>
         <label>
           Email Address:
-          <input
-            value={sampleClientEmail}
-            placeholder="Enter client email address"
-            onChange={(e) => setClientEmail(e.target.value)}
-          ></input>
+          <p>{clientEmail}</p>
         </label>
         <p>List of Services:</p>
         <form>

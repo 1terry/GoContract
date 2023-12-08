@@ -36,7 +36,7 @@ function App() {
           />
 
           <Route
-            path="/invoice/:bookingId"
+            path="/invoice"
             element={
               <PrivateRoute>
                 <Invoice />
@@ -45,7 +45,7 @@ function App() {
           />
 
           <Route
-            path="/loadinvoice/:invoiceId"
+            path="/loadinvoice"
             element={
               <PrivateRoute>
                 <GetInvoice />
