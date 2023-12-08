@@ -54,7 +54,7 @@ function ManageBookings() {
     )
   };
 
-  const handleDecline = async (bookingId) => {
+  const handleDecline = async (bookingId, isRequested = true) => {
     try {
       const response = await fetch(`/declineBooking?bookingId=${bookingId}`, {
         method: "DELETE"
@@ -62,19 +62,26 @@ function ManageBookings() {
       if (!response.ok) {
         throw new Error("Failed to decline booking");
       }
-
-      // Update the state to remove the declined booking
-      setBookings((prevState) => ({
-        ...prevState,
-        requested: prevState.requested.filter(
-          (booking) => booking._id !== bookingId
-        )
-      }));
+  
+      // Update the state based on the type of booking (requested or active)
+      setBookings((prevState) => {
+        if (isRequested) {
+          return {
+            ...prevState,
+            requested: prevState.requested.filter(booking => booking._id !== bookingId),
+          };
+        } else {
+          return {
+            ...prevState,
+            active: prevState.active.filter(booking => booking._id !== bookingId),
+          };
+        }
+      });
     } catch (error) {
       console.error("Error declining booking:", error);
     }
   };
-
+  
   const handleAccept = async (bookingId) => {
     try {
       const response = await fetch(
@@ -156,7 +163,7 @@ function ManageBookings() {
             <p>client name: {booking.clientName}</p>
             <p>Date: {new Date(booking.date).toLocaleDateString()}</p>
             <p>Booking ID: {booking._id}</p>
-            <button onClick={() => handleDecline(booking._id)}>
+            <button onClick={() => handleDecline(booking._id,false)}>
               Cancel Job
             </button>
             <button
