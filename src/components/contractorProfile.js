@@ -19,7 +19,7 @@ function ContractorProfile() {
     // Fetch contractor rating
     const fetchContractorRating = async () => {
       try {
-        const response = await fetch(`/getContractorRating?contractorId=${userData.userId}`);
+        const response = await fetch(`http://localhost:3001/getContractorRating?contractorId=${userData.userId}`);
         if (!response.ok) {
           throw new Error('Failed to fetch rating');
         }
@@ -122,7 +122,7 @@ const handleDeleteAccount = async () => {
   
   return (
     <div>
-      <button onClick={() => navigate('/contractorDashboard')}>Back</button>
+      <button class="btn btn-warning"onClick={() => navigate('/contractorDashboard')}>Back</button>
 
       <h2>My Profile</h2>
       <h3>My Rating: {averageRating}</h3>
@@ -131,39 +131,9 @@ const handleDeleteAccount = async () => {
       <p><strong>Address:</strong> {userData.address}</p>
       <p><strong>Phone Number:</strong> {userData.phoneNumber}</p>
       <p><strong>Email:</strong> {userData.username}</p>
-      <h3>Services:</h3>
-      <label>
-        <input
-          type="checkbox"
-          name="canManageTrades"
-          checked={canManageTrades}
-          onChange={handleCheckboxChange}
-        />
-        Can Manage Trades
-      </label>
       <br></br>
-      <label>
-        <input
-          type="checkbox"
-          name="canManageCalendar"
-          checked={canManageCalendar}
-          onChange={handleCheckboxChange}
-        />
-        Can Manage Calendar
-      </label>
-      <br/>
-      <label>
-        <input
-          type="checkbox"
-          name="canManageBookings"
-          checked={canManageBookings}
-          onChange={handleCheckboxChange}
-        />
-        Can Manage Bookings
-      </label>
-      <br></br>
-      <button onClick={handleDeleteAccount}>Delete Account</button>
-      <button onClick={handleLogout}>Logout</button> 
+      <button class="btn btn-danger" onClick={handleDeleteAccount}>Delete Account</button>
+      <button class="btn btn-primary" onClick={handleLogout}>Logout</button> 
 
     </div>
   );

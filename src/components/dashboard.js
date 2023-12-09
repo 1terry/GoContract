@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./dashboard.css";
 import ContractorCard from "./contractorCard";
+import "./login.css"
 
 function Dashboard() {
   const [showContractorCard, setShowContractorCard] = useState(false);
@@ -54,7 +55,7 @@ function Dashboard() {
       const data = await response.json();
 
       console.log(data);
-
+  
       // Check if 'users' is an array in the response
       if (Array.isArray(data.users)) {
         // Extract usernames from the array
@@ -100,43 +101,28 @@ function Dashboard() {
   };
 
   return (
-    <form onSubmit={handleSearchClick} className="container-search">
-      <h2>Search</h2>
-      {message && <div>{message}</div>}
-      <label>
-        Search for contractor
-        <input
-          type="text"
-          value={contractorName}
-          onChange={(e) => setContractorName(e.target.value)}
-        />
-      </label>
-      <label>
-        <input
-          type="radio"
-          name="options"
-          value="byName"
-          checked={selectedOption === "byName"}
-          onChange={handleRadioChange}
-        />
-        Search by Name
-      </label>
-      <label>
-        <input
-          type="radio"
-          name="options"
-          value="byType"
-          checked={selectedOption === "byType"}
-          onChange={handleRadioChange}
-        />
-        Search by Trade Type
-      </label>
+    <div className="background">
+      
+    <form onSubmit={handleSearchClick} className='container-search'>
+      <div className='searchHeader'>
+        <h2>Search</h2>
+        {/* {message && <div>{message}</div>} */}
+        <label>
+          <input 
+            type="text" 
+            value={contractorName} 
+            onChange={(e) => setContractorName(e.target.value)} 
+            placeholder='Search here'
+          />
+        </label>
+        <label><input type="radio" name="options" value="byName" checked={selectedOption === "byName"} onChange={handleRadioChange}/>Search by Name</label>
+        <label><input type="radio" name="options" value="byType" checked={selectedOption === "byType"} onChange={handleRadioChange}/>Search by Trade Type</label>
 
-      <button type="submit">Search</button>
+        <button type="submit" class="btn btn-primary btn-success">Search</button>
+      <button className='BackButton btn-primary btn' onClick={handleLogout}>Logout</button>
+      </div>
 
-      <button onClick={handleLogout}>Logout</button>
-
-      <div>
+      <div className='searchBar'>
         {/* <p>JSON Data:</p> */}
         {/* <pre>{jsonData}</pre> */}
         <pre>{passedData}</pre>
@@ -144,6 +130,9 @@ function Dashboard() {
       </div>
       {showContractorCard}
     </form>
+
+    </div>
+
   );
 }
 

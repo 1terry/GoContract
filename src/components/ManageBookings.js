@@ -6,14 +6,24 @@ function ManageBookings() {
   const { userData } = useAuth();
   const [bookings, setBookings] = useState({ requested: [], active: [] });
   const navigate = useNavigate();
-  const [searchTerm, setSearchTerm] = useState(""); // State for search term
+  const [serviceName, setServiceName] = useState('');
+  const [services, setServices] = useState([]);
+  const [searchTerm, setSearchTerm] = useState(''); // State for search term
 
   useEffect(() => {
     const fetchBookings = async () => {
       try {
-        const response = await fetch(
-          `/getContractorBookings?userId=${userData.userId}`
-        );
+        setServiceName("ManageBookings")
+        const service = await fetch(`http://localhost:3002/services`);
+        const Data = await service.json();
+        // Assuming data is an array, filter based on serviceName
+        const ServiceData = Data.services.filter(service => service.serviceName == 'ManageBookings');
+        if (!ServiceData || ServiceData.length === 0) {
+          console.error('Service unavailable');
+          return;
+        }
+        setServices(ServiceData)
+        const response = await fetch(`${ServiceData[0].serviceURL}/getContractorBookings?userId=${userData.userId}`);
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }
@@ -56,9 +66,7 @@ function ManageBookings() {
 
   const handleDecline = async (bookingId, isRequested = true) => {
     try {
-      const response = await fetch(`/declineBooking?bookingId=${bookingId}`, {
-        method: "DELETE"
-      });
+      const response = await fetch(`${services[0].serviceURL}/declineBooking?bookingId=${bookingId}`, { method: 'DELETE' });
       if (!response.ok) {
         throw new Error("Failed to decline booking");
       }
@@ -84,10 +92,7 @@ function ManageBookings() {
   
   const handleAccept = async (bookingId) => {
     try {
-      const response = await fetch(
-        `/acceptBookingRequest?bookingId=${bookingId}`,
-        { method: "PATCH" }
-      );
+      const response = await fetch(`${services[0].serviceURL}/acceptBookingRequest?bookingId=${bookingId}`, { method: 'PATCH' });
       if (!response.ok) {
         throw new Error("Failed to accept booking");
       }
@@ -114,16 +119,30 @@ function ManageBookings() {
 
   const handleInvoiceClick = async (bookingId, clientEmail) => {
     try {
+      const service = await fetch(`http://localhost:3002/services`);
+      const Data = await service.json();
+      const ServiceData = Data.services.filter(service => service.serviceName == 'Invoice');
+        if (!ServiceData || ServiceData.length === 0) {
+          console.error('Service unavailable');
+          return;
+        }
       const response = await fetch(
-        `/getInvoiceByBookingId?identifier=${bookingId}`
+        `${ServiceData[0].serviceURL}/getInvoiceByBookingId?identifier=${bookingId}`
       );
 
       const invoice = await response.json();
       if (invoice) {
-        navigate("/getInvoice", { state: { invoiceId: invoice.invoiceId } });
+        navigate(`/getInvoice`, { state: { invoiceId: invoice.invoiceId } });
       }
     } catch (error) {
-      navigate("/invoice", {
+      const service = await fetch(`http://localhost:3002/services`);
+      const Data = await service.json();
+      const ServiceData = Data.services.filter(service => service.serviceName == 'Invoice');
+        if (!ServiceData || ServiceData.length === 0) {
+          console.error('Service unavailable');
+          return;
+        }
+      navigate(`/invoice`, {
         state: { bookingId: bookingId, clientEmail: clientEmail }
       });
     }
@@ -131,14 +150,21 @@ function ManageBookings() {
 
   return (
     <div>
-      <button onClick={() => navigate("/contractorDashboard")}>Back</button>
-      <h3>Search Clients</h3>
-      <input
-        type="text"
-        placeholder="Search by Client Name"
-        value={searchTerm}
-        onChange={handleSearchChange}
-      />
+      {!services || services.length === 0? (
+        <div>
+          <button onClick={() => navigate('/contractorDashboard')}>Back</button>
+          <h2>Service not available.</h2>
+        </div>
+        ) : (
+          <>
+          <button onClick={() => navigate('/contractorDashboard')}>Back</button>
+          <h3>Search Clients</h3>
+          <input
+            type="text"
+            placeholder="Search by Client Name"
+            value={searchTerm}
+            onChange={handleSearchChange}
+          />
 
       <h2>Requested Bookings</h2>
       <div>
@@ -149,8 +175,8 @@ function ManageBookings() {
             <p>client name: {booking.clientName}</p>
             <p>Date: {new Date(booking.date).toLocaleDateString()}</p>
             <p>Booking ID: {booking._id}</p>
-            <button onClick={() => handleDecline(booking._id)}>Decline</button>
-            <button onClick={() => handleAccept(booking._id)}>Accept</button>
+            <button class="btn btn-danger" onClick={() => handleDecline(booking._id)}>Decline</button>
+            <button class="btn btn-success" onClick={() => handleAccept(booking._id)}>Accept</button>
           </div>
         ))}
       </div>
@@ -163,10 +189,10 @@ function ManageBookings() {
             <p>client name: {booking.clientName}</p>
             <p>Date: {new Date(booking.date).toLocaleDateString()}</p>
             <p>Booking ID: {booking._id}</p>
-            <button onClick={() => handleDecline(booking._id,false)}>
+            <button class="btn btn-danger"onClick={() => handleDecline(booking._id,false)}>
               Cancel Job
             </button>
-            <button
+            <button class="btn btn-success"
               onClick={() =>
                 handleInvoiceClick(booking._id, booking.clientEmail)
               }
@@ -176,8 +202,11 @@ function ManageBookings() {
           </div>
         ))}
       </div>
+      </>
+      )}
     </div>
   );
+  
 }
 
 export default ManageBookings;

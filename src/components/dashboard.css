@@ -1,4 +1,10 @@
-src/dashboard.css
+/* src/dashboard.css */
+
+.BackButton{
+  position: absolute;
+  left: 20px;
+  top: 30px;
+}
 
 /* Center the search bar and heading both horizontally and vertically */
 .container-search {
@@ -6,22 +12,43 @@ src/dashboard.css
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    height: 100vh; /* Adjust the height as needed */
-    background-color: rgb(221, 221, 221);
+    /* height: 100vh;  */
+    background-color: rgb(171, 229, 240);    
+    /* width: 100vw; */
+    text-align: center;
+
+
   }
   
 h1{
     margin-top: -50px;
-    text-align: center;
+    /* text-align: center; */
 }
 
-  /* Style the input */
-  .format {
+.searchBar{
+  background-color: white;
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.searchHeader{
+  background-color: rgb(214, 136, 136);
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+  /* .formatBox {
     padding: 8px;
-    /* width: 25vw; Adjust the width as needed */
+    width: 25vw;
     min-width: 300px;
-    /* border: 1px solid #ccc; */
+    border: 1px solid #ccc;
     border-radius: 4px;
     box-sizing: border-box;
-  }
+  } */
   

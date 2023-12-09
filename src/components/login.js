@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import './login.css';
+import { Navigation } from "./Navigation";
 
 function Login() {
   const { login, setUserData } = useAuth(); // Destructure setUserData from the context
@@ -91,7 +92,22 @@ function Login() {
   };
 
   return (
-    
+      <div className="background">
+        
+    <div class="area" >
+                <ul class="circles">
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                </ul>
+        </div >
       <div className="loginBox">
         <img className="user" src="https://i.ibb.co/yVGxFPR/2.png" height="100px" width="100px" alt="User" />
         <h3>Sign in here</h3>
@@ -116,6 +132,7 @@ function Login() {
         <div className="text-center">
           {/* <p style={{ color: '#59238F' }}>Sign-Up</p> */}
         </div>
+      </div>
       </div>
     );
     

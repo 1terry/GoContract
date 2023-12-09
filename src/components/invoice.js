@@ -8,6 +8,8 @@ function Invoice() {
   const { userData } = useAuth();
   const location = useLocation();
   const { bookingId, clientEmail } = location.state;
+  const [serviceName, setServiceName] = useState('');
+  const [services, setServices] = useState([]);
 
   const [inputFields, setInputFields] = useState([{ name: "", value: "" }]);
   const [contractorIdentifier, setIdentifier] = useState("");
@@ -24,10 +26,35 @@ function Invoice() {
   var yyyy = today.getFullYear();
   today = mm + "/" + dd + "/" + yyyy;
 
+  useEffect(() => {
+    // Fetch events from your database
+    fetchEvents();
+  }, []); // Empty dependency array ensures the effect runs once on component mount
+
+  const fetchEvents = async () => {
+    try {
+      setServiceName("Invoice")
+      const service = await fetch(`http://localhost:3002/services`);
+      const Data = await service.json();
+      console.log('Received data:', Data);
+      // Assuming data is an array, filter based on serviceName
+      const ServiceData = Data.services.filter(service => service.serviceName == 'Invoice');
+      console.log(ServiceData[0].serviceURL)
+      if (!ServiceData || ServiceData.length === 0) {
+        console.error('Service unavailable');
+        return;
+      }
+      setServices(ServiceData)
+    } catch (error) {
+      console.error('Error fetching service:', error);
+    }
+  };
+
+  
   const sendEmail = async () => {
     try {
       const emailResponse = await fetch(
-        "http://localhost:3001/sendInvoiceByEmail",
+        `${services[0].serviceURL}/sendInvoiceByEmail`,
         {
           method: "POST",
           headers: {
@@ -56,7 +83,7 @@ function Invoice() {
     event.preventDefault();
     setMessage("");
     try {
-      const response = await fetch("http://localhost:3001/invoice", {
+      const response = await fetch(`${services[0].serviceURL}/invoice`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -108,6 +135,13 @@ function Invoice() {
 
   return (
     <div>
+    {!services || services.length === 0? (
+      <div>
+        <button onClick={() => navigate('/contractorDashboard')}>Back</button>
+        <h2>Service not available.</h2>
+      </div>
+    ) : (
+      <>
       <h1>INVOICE</h1>
       <div>
         <p>Invoice #:</p>
@@ -208,6 +242,8 @@ function Invoice() {
       <button onClick={saveInvoice}>Save Invoice</button>
       <button onClick={() => navigate("/contractorDashboard")}>Back</button>
       {message && <div>{message}</div>}
+      </>
+    )}
     </div>
   );
 }
